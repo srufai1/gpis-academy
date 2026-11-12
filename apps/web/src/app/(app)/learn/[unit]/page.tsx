@@ -1,0 +1,40 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PageError } from "@/components/page-error";
+import { LessonView } from "@/components/views/lesson-view";
+import { requireLearner } from "@/lib/auth/learner";
+import { getUnit, moduleOfUnit } from "@/lib/content/load";
+import { renderMarkdown } from "@/lib/content/markdown";
+import { readProgress } from "@/lib/progress/read";
+import { ReadButton } from "./read-button";
+
+type Props = { params: Promise<{ unit: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const unit = getUnit((await params).unit);
+  return { title: unit ? unit.meta.title : "Lesson" };
+}
+
+export default async function LessonPage({ params }: Props) {
+  const { supabase } = await requireLearner();
+  const unit = getUnit((await params).unit);
+  if (!unit) notFound();
+  const progress = await readProgress(supabase);
+  if (!progress) return <PageError />;
+  const mod = moduleOfUnit(unit);
+  const state = progress[unit.meta.id];
+  const read = state === "read" || state === "quiz_passed" || state === "done";
+  return (
+    <LessonView
+      moduleHref={`/map/${mod.slug}`}
+      moduleLabel={`Module ${mod.label ?? mod.number}`}
+      label={`${mod.label ?? mod.number}.${unit.meta.position}`}
+      title={unit.meta.title}
+      lessonHtml={renderMarkdown(unit.lesson)}
+      exampleHtml={renderMarkdown(unit.example)}
+      gpisPart={unit.meta.gpis_part}
+      read={read}
+      readForm={<ReadButton unitId={unit.meta.id} read={read} />}
+    />
+  );
+}

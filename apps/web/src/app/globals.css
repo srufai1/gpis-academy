@@ -52,3 +52,22 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* Lesson text rendered from Markdown (lib/content/markdown.ts). */
+@layer components {
+  .md { @apply space-y-4 leading-relaxed; overflow-wrap: anywhere; }
+  .md h2 { @apply text-xl font-semibold; }
+  .md h3 { @apply pt-2 text-lg font-semibold; }
+  .md h4, .md h5, .md h6 { @apply font-semibold; }
+  .md ul { @apply list-disc space-y-1 pl-5; }
+  .md ol { @apply list-decimal space-y-1 pl-5; }
+  .md a { @apply text-primary underline underline-offset-4; }
+  .md blockquote { @apply border-l-4 pl-3 text-muted-foreground; }
+  .md :not(pre) > code { @apply rounded bg-muted px-1 py-0.5 text-[0.9em]; overflow-wrap: anywhere; }
+  .md .md-code { @apply max-w-full overflow-x-auto rounded-lg border bg-muted; }
+  .md .md-code pre { @apply w-max min-w-full p-3 text-sm leading-normal; }
+  .md .md-scroll { @apply max-w-full overflow-x-auto; }
+  .md table { @apply w-max min-w-full border-collapse text-sm; }
+  .md th, .md td { @apply border px-2 py-1 text-left align-top; }
+  .md th { @apply bg-muted font-medium; }
+}
