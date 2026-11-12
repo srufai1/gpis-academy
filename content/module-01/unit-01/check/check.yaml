@@ -1,0 +1,125 @@
+# Check for project 1.1 "Find your way".
+# Any change in this folder needs a new version (docs/checker.md).
+id: m1-p1
+title: Find your way
+version: 1.0.0
+unit: m1-u1
+requires: [wsl]
+
+# `academy init m1-p1` builds the lab folder from this seed.
+lab:
+  root: ~/academy-labs/m1-p1/office
+  seed: fixtures/seed.sh
+
+# All required steps must pass.
+pass: all-required
+
+steps:
+  - id: class-list
+    kind: files
+    title: The class list is in reports/term-1
+    required: true
+    expect:
+      - path: reports/term-1/class-list.txt
+        type: file
+        sha256_of: fixtures/class-list.txt
+
+  - id: term-2-notes
+    kind: files
+    title: "'term 2 notes.txt' is in reports/term-2"
+    required: true
+    expect:
+      - path: "reports/term-2/term 2 notes.txt"
+        type: file
+      - path: "term 2 notes.txt"
+        type: absent
+
+  - id: current-link
+    kind: files
+    title: current points to reports/term-2 and works
+    required: true
+    expect:
+      - path: current
+        type: symlink
+        target: reports/term-2
+        resolves: true
+
+  - id: fees-permissions
+    kind: files
+    title: fees.csv is 640
+    required: true
+    expect:
+      - path: finance/fees.csv
+        type: file
+        mode: "640"
+
+  - id: finance-directory
+    kind: files
+    title: finance can be entered by owner and group only
+    required: true
+    expect:
+      - path: finance
+        type: directory
+        mode_any_of: ["750", "770"]
+
+  - id: backup-script
+    kind: files
+    title: backup.sh runs for its owner; others cannot change it
+    required: true
+    expect:
+      - path: scripts/backup.sh
+        type: file
+        mode_any_of: ["700", "740", "744", "750", "754", "755"]
+
+  - id: backup-runs
+    kind: tests
+    title: backup.sh prints "backup ok"
+    required: true
+    run:
+      command: ./scripts/backup.sh
+      cwd: lab
+      timeout_seconds: 5
+      expect_exit: 0
+      expect_stdout: "backup ok\n"
+
+  - id: settings
+    kind: files
+    title: settings.conf says term=2 and nothing else changed
+    required: true
+    expect:
+      - path: settings.conf
+        type: file
+        sha256_of: fixtures/settings.expected.conf
+
+  - id: no-tmp
+    kind: files
+    title: No *.tmp file remains
+    required: true
+    expect:
+      - glob: "**/*.tmp"
+        type: absent
+
+  - id: answers
+    kind: doc
+    title: answers.md has the three headings
+    required: true
+    expect:
+      path: answers.md
+      headings:
+        - "## Owner, group, others"
+        - "## Execute on a file and on a directory"
+        - "## Why the link was broken"
+      min_words_per_heading: 15
+
+# Shown to the learner when a step fails. Say what is wrong, not how to fix it.
+messages:
+  class-list: "reports/term-1/class-list.txt is missing or its content changed."
+  term-2-notes: "'term 2 notes.txt' must be inside reports/term-2 and nowhere else."
+  current-link: "current must be a symbolic link to reports/term-2 that opens."
+  fees-permissions: "finance/fees.csv does not have the asked permissions."
+  finance-directory: "Others can still enter finance, or the owner or group cannot."
+  backup-script: "scripts/backup.sh cannot be run by its owner, or others can change it."
+  backup-runs: "Running ./scripts/backup.sh did not print exactly 'backup ok'."
+  settings: "settings.conf must differ from the original in one line only: term=2."
+  no-tmp: "A *.tmp file is still in the folder."
+  answers: "answers.md is missing a heading, or an answer is too short."

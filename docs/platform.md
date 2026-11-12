@@ -60,7 +60,8 @@ flowchart LR
 | Sign in | Email and password (Supabase Auth); connect the CLI to the account |
 
 Course content is **files in this repo**, not database rows the learner edits:
-`content/<module>/<unit>/lesson.md`, `quiz.json`, `task.md`. A build step lists them into
+`content/module-NN/unit-NN/` holding `lesson.md`, `quiz.json`, `lab.md` and the rest (the
+template is `content/module-01/unit-01/`). A build step lists them into
 `content_items` so that progress rows can point at something real.
 
 ## Learner journey
@@ -220,14 +221,13 @@ exists. The learner cannot set those two by hand.
 ```text
 gpis-academy/
   docs/                    decisions, curriculum, platform, checker, mockups
-  content/                 the course (original lessons only)
-    m1-command-line/
-      module.md
-      u1-terminal/         lesson.md  quiz.json
-      p1-find-your-way/    task.md  hints.md  review.md
-  checks/                  check definitions and their tests (see checker.md)
-    m1/p1/                 check.yaml  tests/
-    manifest.json          version and hash of every check
+  content/                 the course (original lessons only); see content/README.md
+    module-01/
+      unit-01/             unit.md  lesson.md  example.md  quiz.json  lab.md
+                           debugging-lab.md  own-build.md  review.md
+        check/             check.yaml  fixtures/   (the lab's check; see checker.md)
+    index.json             built: every module, unit and project
+    manifest.json          built: version and hash of every check
   packages/
     checker/               the CLI (Node/TypeScript), published as `academy`
     shared/                types and result schema used by CLI and platform

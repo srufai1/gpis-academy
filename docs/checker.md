@@ -35,15 +35,17 @@ Result: NOT PASSED · sent to platform (run 128)
 
 ## How a check is defined
 
-Checks are **versioned files in this repo**, reviewed like any other change.
+Checks are **versioned files in this repo**, reviewed like any other change. A check lives
+beside the unit it belongs to (sample: `content/module-01/unit-01/check/`).
 
 ```text
-checks/
-  m2/p1/
-    check.yaml        what to run, in order
-    tests/            the test files the checker runs against the learner's code
-    fixtures/         sample inputs and expected outputs
-  manifest.json       every check: version and sha256 of its folder
+content/
+  module-02/unit-01/
+    check/
+      check.yaml      what to run, in order
+      tests/          the test files the checker runs against the learner's code
+      fixtures/       seed script, sample inputs and expected outputs
+  manifest.json       built: every check's id, version and sha256 of its folder
 ```
 
 `check.yaml` lists steps. Each step uses one of the seven check kinds from `curriculum.md`:

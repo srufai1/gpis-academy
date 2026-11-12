@@ -1,0 +1,111 @@
+{
+  "id": "m1-u1-quiz",
+  "title": "The terminal and the filesystem",
+  "pass_mark": 5,
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "You are in /home/sani/projects/gpis-rebuild/src. Where does `cd ../../notes` take you?",
+      "options": [
+        "/home/sani/projects/notes",
+        "/home/sani/notes",
+        "/home/sani/projects/gpis-rebuild/notes",
+        "/notes"
+      ],
+      "answer": 0,
+      "why": "Each `..` goes up one level: src → gpis-rebuild → projects. Then down into notes.",
+      "wrong": {
+        "1": "That needs three `..`, not two.",
+        "2": "That is one `..` only.",
+        "3": "A path that starts with `..` is relative; it never starts from the root."
+      }
+    },
+    {
+      "id": "q2",
+      "prompt": "`ls -l` shows `-rw-r-----`. Which number sets exactly this?",
+      "options": ["644", "640", "460", "750"],
+      "answer": 1,
+      "why": "Owner rw- = 4+2 = 6, group r-- = 4, others --- = 0.",
+      "wrong": {
+        "0": "644 would let others read (r--).",
+        "2": "460 gives the owner read only and the group read and write.",
+        "3": "750 adds execute for the owner and the group."
+      }
+    },
+    {
+      "id": "q3",
+      "prompt": "A directory has permissions `drw-r--r--` and you are the owner. What happens with `cd` into it?",
+      "options": [
+        "It works, because you can read it",
+        "Permission denied, because execute (x) on a directory means 'enter'",
+        "It works, but `ls` inside fails",
+        "It works only with `cd -f`"
+      ],
+      "answer": 1,
+      "why": "On a directory, x is the right to enter it and reach what is inside. Read alone only lists names.",
+      "wrong": {
+        "0": "Read lets you list the names, not enter.",
+        "2": "It is the other way round: listing may work, entering does not.",
+        "3": "`cd` has no such option."
+      }
+    },
+    {
+      "id": "q4",
+      "prompt": "`ls -l` shows `current -> reports/2025`, and `cat current/summary.txt` says 'No such file or directory'. What is the most likely cause?",
+      "options": [
+        "The link's target was moved or removed",
+        "You have no read permission on the link",
+        "Links cannot point to directories",
+        "The file is empty"
+      ],
+      "answer": 0,
+      "why": "A symbolic link stores a path. If nothing is at that path any more, the link is broken.",
+      "wrong": {
+        "1": "A permission problem says 'Permission denied'.",
+        "2": "They can.",
+        "3": "An empty file prints nothing; it gives no error."
+      }
+    },
+    {
+      "id": "q5",
+      "prompt": "Which command prints the file named `term 1.txt`?",
+      "options": ["cat term 1.txt", "cat \"term 1.txt\"", "cat term+1.txt", "cat (term 1.txt)"],
+      "answer": 1,
+      "why": "Quotes make the shell treat the name with a space as one word.",
+      "wrong": {
+        "0": "The shell sees two names: `term` and `1.txt`.",
+        "2": "`+` is just a character; no such file exists.",
+        "3": "Round brackets mean something else to the shell."
+      }
+    },
+    {
+      "id": "q6",
+      "prompt": "A script must be run only by its owner. Nobody else may read it. Which is the least permission that works?",
+      "options": ["chmod 777 run.sh", "chmod 755 run.sh", "chmod 700 run.sh", "chmod 400 run.sh"],
+      "answer": 2,
+      "why": "700 gives the owner read, write and execute, and nothing to anyone else.",
+      "wrong": {
+        "0": "Everyone could read, change and run it.",
+        "1": "Group and others could read and run it.",
+        "3": "The owner could read it but not run it."
+      }
+    },
+    {
+      "id": "q7",
+      "prompt": "What does `cd` with nothing after it do?",
+      "options": [
+        "Shows the current directory",
+        "Goes to your home directory",
+        "Goes to the root, /",
+        "Gives an error"
+      ],
+      "answer": 1,
+      "why": "`cd` alone is the same as `cd ~`.",
+      "wrong": {
+        "0": "That is `pwd`.",
+        "2": "That is `cd /`.",
+        "3": "It is a valid command."
+      }
+    }
+  ]
+}
