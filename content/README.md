@@ -2,7 +2,8 @@
 
 Original lessons only (decisions.md, ADR-5). Never copy ALX pages here.
 
-`module-01/unit-01/` is the **template**. Every later unit has the same files:
+`course.yaml` lists every module in order (number, title, guidance, length), even before its
+units exist. `module-01/unit-01/` is the **template**. Every later unit has the same files:
 
 | File | Step of the unit | Notes |
 | :--- | :--- | :--- |
@@ -23,3 +24,12 @@ Rules:
 - Each unit names the part of GPIS it relates to, and ends by comparing with it.
 - A check only reads and runs. It never changes the learner's files outside the lab folder.
 - Changing anything under `check/` needs a new `version` in `check.yaml`.
+
+After changing anything here, rebuild the index and the check manifest and commit them:
+
+```bash
+npm run content
+```
+
+`npm test` fails if `index.json` or `manifest.json` is out of date, if a file is missing or
+malformed, if an id is used twice, or if `check/` changed without a new version.

@@ -1,0 +1,10 @@
+{
+  "checks": [
+    {
+      "id": "m1-p1",
+      "version": "1.0.0",
+      "sha256": "fb0ca32c8b8adb86f3d0f6e7d261a1f2b2df7c3b3f13bc646b4efb61d479bd2f",
+      "unit": "m1-u1"
+    }
+  ]
+}

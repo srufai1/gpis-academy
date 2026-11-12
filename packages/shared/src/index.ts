@@ -1,5 +1,5 @@
 /**
- * Types and the result format shared by the checker CLI and the platform.
- * Filled in by T05 (content schema) and T12 (result format and signing).
+ * Types and helpers shared by the checker CLI and the platform.
+ * The result format and signing arrive in T12.
  */
-export {};
+export * from "./content-schema.ts";

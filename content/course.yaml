@@ -1,0 +1,14 @@
+# The course map: every module in order, even before its units are written.
+# Titles, guidance and length come from docs/curriculum.md. Units live in
+# content/module-NN/unit-NN/ and name their module by number.
+modules:
+  - { number: 1, slug: m1, title: "Command line, Git and how the web works", guidance: guided, guidance_label: Guided, weeks: 6 }
+  - { number: 2, slug: m2, title: "JavaScript and TypeScript", guidance: guided, guidance_label: Guided, weeks: 8 }
+  - { number: 3, slug: m3, title: "Frontend with Next.js", guidance: guided, guidance_label: "Guided → half", weeks: 8 }
+  - { number: 4, slug: m4, title: "Databases", guidance: half, guidance_label: "Half guided", weeks: 7 }
+  - { number: 5, slug: m5, title: "Backend and auth in Next.js", guidance: half, guidance_label: "Half guided", weeks: 7 }
+  - { number: 6, slug: m6, title: "System design", guidance: half, guidance_label: "Half guided", weeks: 4 }
+  - { number: 7, slug: m7, title: "Security, testing and DevOps", guidance: half, guidance_label: "Half → independent", weeks: 8 }
+  - { number: 8, slug: m8, title: "Algorithms and problem solving", guidance: half, guidance_label: "Half guided", weeks: 4 }
+  - { number: 9, slug: m9, title: "Capstone", guidance: independent, guidance_label: Independent, weeks: 8 }
+  - { number: 10, slug: py, title: "Python track", guidance: half, guidance_label: "Half → independent", weeks: 8, label: Python }

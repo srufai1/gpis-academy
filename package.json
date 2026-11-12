@@ -7,19 +7,23 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18"
   },
   "scripts": {
     "dev": "npm run dev --workspace @gpis-academy/web",
     "build": "npm run build --workspaces --if-present",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/run-tests.mjs"
+    "test": "node scripts/run-tests.mjs",
+    "content": "node scripts/build-content.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.16",
     "@types/node": "^22",
+    "@types/pg": "^8.23.1",
     "eslint": "^9",
+    "pg": "^8.23.1",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "typescript-eslint": "^8"
   }

@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./content-schema": "./src/content-schema.ts",
+    "./content-load": "./src/content-load.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.8.2"
   }
 }

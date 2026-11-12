@@ -1,0 +1,204 @@
+{
+  "modules": [
+    {
+      "number": 1,
+      "slug": "m1",
+      "title": "Command line, Git and how the web works",
+      "guidance": "guided",
+      "guidance_label": "Guided",
+      "weeks": 6
+    },
+    {
+      "number": 2,
+      "slug": "m2",
+      "title": "JavaScript and TypeScript",
+      "guidance": "guided",
+      "guidance_label": "Guided",
+      "weeks": 8
+    },
+    {
+      "number": 3,
+      "slug": "m3",
+      "title": "Frontend with Next.js",
+      "guidance": "guided",
+      "guidance_label": "Guided → half",
+      "weeks": 8
+    },
+    {
+      "number": 4,
+      "slug": "m4",
+      "title": "Databases",
+      "guidance": "half",
+      "guidance_label": "Half guided",
+      "weeks": 7
+    },
+    {
+      "number": 5,
+      "slug": "m5",
+      "title": "Backend and auth in Next.js",
+      "guidance": "half",
+      "guidance_label": "Half guided",
+      "weeks": 7
+    },
+    {
+      "number": 6,
+      "slug": "m6",
+      "title": "System design",
+      "guidance": "half",
+      "guidance_label": "Half guided",
+      "weeks": 4
+    },
+    {
+      "number": 7,
+      "slug": "m7",
+      "title": "Security, testing and DevOps",
+      "guidance": "half",
+      "guidance_label": "Half → independent",
+      "weeks": 8
+    },
+    {
+      "number": 8,
+      "slug": "m8",
+      "title": "Algorithms and problem solving",
+      "guidance": "half",
+      "guidance_label": "Half guided",
+      "weeks": 4
+    },
+    {
+      "number": 9,
+      "slug": "m9",
+      "title": "Capstone",
+      "guidance": "independent",
+      "guidance_label": "Independent",
+      "weeks": 8
+    },
+    {
+      "number": 10,
+      "slug": "py",
+      "title": "Python track",
+      "guidance": "half",
+      "guidance_label": "Half → independent",
+      "weeks": 8,
+      "label": "Python"
+    }
+  ],
+  "items": [
+    {
+      "slug": "m1",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 1,
+      "title": "Command line, Git and how the web works",
+      "guidance": "guided",
+      "content_hash": "35f00833df4c1a719383d94039f5f04e0d118c0df3d26c61e2de9c308a93f2d7"
+    },
+    {
+      "slug": "m2",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 2,
+      "title": "JavaScript and TypeScript",
+      "guidance": "guided",
+      "content_hash": "a2c48671a36221ca3d9bb1557fb632bd7520d2ff3c83d977d1c8c4c5efd50e0a"
+    },
+    {
+      "slug": "m3",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 3,
+      "title": "Frontend with Next.js",
+      "guidance": "guided",
+      "content_hash": "eef2c40dd38310bf888753a23fde4170eb592d959d3144ec6157d6d03ba8e224"
+    },
+    {
+      "slug": "m4",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 4,
+      "title": "Databases",
+      "guidance": "half",
+      "content_hash": "896fe51257a5604117243e9bac6ca7c304f7a77672618679a36e412dedc9f56b"
+    },
+    {
+      "slug": "m5",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 5,
+      "title": "Backend and auth in Next.js",
+      "guidance": "half",
+      "content_hash": "2e77420a3e77017f14c0b26d078d93160ed186684d64600fc258c54277e45517"
+    },
+    {
+      "slug": "m6",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 6,
+      "title": "System design",
+      "guidance": "half",
+      "content_hash": "ea5b9cc38c742d8459ea044eaf2a184f5dc7bf58a765c2c41355dc24c2d6d4e7"
+    },
+    {
+      "slug": "m7",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 7,
+      "title": "Security, testing and DevOps",
+      "guidance": "half",
+      "content_hash": "6ee0299754d37062cc83d8cc046e474e0e0a2d7b4133b7ff3f490e2601ffa83a"
+    },
+    {
+      "slug": "m8",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 8,
+      "title": "Algorithms and problem solving",
+      "guidance": "half",
+      "content_hash": "517dfa1e0a04190d8e3630dcbd69fff00de0e76e41b6af3c476363345f2632a0"
+    },
+    {
+      "slug": "m9",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 9,
+      "title": "Capstone",
+      "guidance": "independent",
+      "content_hash": "a5231925d186969f6998b57da31654e495318be8b56262cf85af60338b40b723"
+    },
+    {
+      "slug": "py",
+      "kind": "module",
+      "parent_slug": null,
+      "position": 10,
+      "title": "Python track",
+      "guidance": "half",
+      "content_hash": "92b7d2ede15027e00d18163554dfd0f733a9ba8d4cd501a1b2a5ba684cb3aca8"
+    },
+    {
+      "slug": "m1-u1",
+      "kind": "unit",
+      "parent_slug": "m1",
+      "position": 1,
+      "title": "The terminal and the filesystem",
+      "guidance": "guided",
+      "content_hash": "5cfef7737d0d0101e0557155c9b4c7dae59e24f6d0c95d7fa459c712b5047e2f"
+    },
+    {
+      "slug": "m1-u1-quiz",
+      "kind": "quiz",
+      "parent_slug": "m1-u1",
+      "position": 1,
+      "title": "The terminal and the filesystem",
+      "guidance": "guided",
+      "content_hash": "2bffcb8ed0eb5b3780927221afd310a64056b4e41dbe81abdfe58a6e9673ecec"
+    },
+    {
+      "slug": "m1-p1",
+      "kind": "project",
+      "parent_slug": "m1-u1",
+      "position": 2,
+      "title": "Find your way",
+      "guidance": "guided",
+      "content_hash": "04daea3877c4106b5ce657130f4524db6af78a5f4068a0e6a95887c3f653bf05"
+    }
+  ]
+}
