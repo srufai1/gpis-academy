@@ -49,10 +49,12 @@ VS Code. Work is checked by a **local checker CLI**.
 One learner does not need it. A local checker gives the same feedback at no cost.
 
 **Consequences.**
-- Labs run on the learner's machine. Database labs use local PostgreSQL / local Supabase
-  (Docker Desktop with WSL 2), never a hosted lab machine.
-- The checker runs offline in the learner's project folder. It can: run a test suite shipped
-  with the course, run lint and type checks, read the Git history, run SQL against the local
+- Labs run on the learner's machine in **WSL 2 (Ubuntu), required from Module 1**.
+- Database labs use the learner's own **free Supabase cloud project** by default. Docker
+  Desktop is optional and only for labs that truly need it (replication and restore,
+  containers); `curriculum.md` marks them **[Docker]**. (Amended 12 Nov 2026.)
+- The checker runs in the learner's project folder. It can: run a test suite shipped with the
+  course, run lint and type checks, read the Git history, run SQL against the learner's lab
   database, and open a page in a local browser at 360px wide.
 - The checker reports pass / fail with the reason. It never uploads code.
 - A "pass" from the checker is practical evidence only. The written explanation and the

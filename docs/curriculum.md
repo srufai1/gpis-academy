@@ -8,8 +8,12 @@ Read `decisions.md` first. This file lists the modules in order.
   is the reference answer. You read it; you never edit it or copy it in bulk.
 - **Stack:** Next.js 16 (App Router), TypeScript strict, Supabase (PostgreSQL, RLS, Auth),
   Tailwind CSS v4, shadcn/ui, Vercel. Python comes last, as its own track.
-- **Tools:** your own PowerShell or WSL terminal, VS Code, Git, Node.js, Docker Desktop
-  (for local PostgreSQL / local Supabase). Nothing is hosted for you.
+- **Tools:** **WSL 2 with Ubuntu is required from Module 1**; all terminal work happens
+  there. VS Code (with the WSL extension), Git and Node.js run inside WSL.
+- **Database:** your own **free Supabase cloud project** is the default for every database
+  lab. One project for learning (`gpis-rebuild-dev`); never a project that holds real data.
+- **Docker Desktop is optional.** It is needed only for the labs marked **[Docker]**
+  (replication and restore, containers). Every other lab works without it.
 - **Pace:** 12–15 focused hours a week. Main course about 60 weeks; Python track 8 weeks.
 - **Every unit** follows the same eight steps: lesson → guided example → quiz → lab →
   debugging lab → own build → review → mastery check.
@@ -18,7 +22,9 @@ Read `decisions.md` first. This file lists the modules in order.
 
 ## The local checker
 
-A small command-line tool you run in your project folder. It works offline and uploads nothing.
+A small command-line tool you run in your project folder (inside WSL). It uploads nothing.
+It needs the network only for `sql` checks, which connect to **your own** Supabase project
+with the connection details in your local `.env` file.
 
 ```bash
 npx academy check m2-p1
@@ -32,12 +38,21 @@ What it can do:
 | `tests` | Runs a test suite that ships with the course against your code |
 | `static` | Runs `eslint`, `tsc --noEmit`, `next build` |
 | `git` | Reads your history: branches, commit messages, no secrets committed |
-| `sql` | Runs queries against your local database and compares results |
+| `sql` | Runs queries against your lab database (your Supabase cloud project; a local Docker database in **[Docker]** labs) and compares results |
 | `page` | Opens a local page in a browser at 360px and checks what a user would see |
 | `doc` | A written file exists and has the required headings (it does not judge the text) |
 
 The checker proves behaviour. It cannot prove understanding: the written explanation and the
 GPIS comparison are **self-assessed** and are shown as such.
+
+## Labs that need Docker
+
+| Lab | Why | Without Docker |
+| :--- | :--- | :--- |
+| 4.6 Backup, restore, replica | Needs two database servers you control | Restore half on the cloud project; replica half as a worked example |
+| 7.5 Web stack debugging | Needs a proxy, an app and a database you can break | Written diagnosis from supplied logs |
+| 7.2 traffic lab (optional) | Needs an isolated teaching network | Skip |
+| P.4 container (optional) | Packaging the Python service | Run the service directly in WSL |
 
 ## Guidance levels
 
@@ -74,6 +89,10 @@ between typing a URL and seeing a page.
 
 **Rebuilds.** No GPIS feature yet. You set up `gpis-rebuild` the way GPIS is set up: folder
 layout, `README.md`, an `AGENTS.md`-style rules file, small commits, one topic each.
+
+**Setup (week 1, before project 1.1).** Install WSL 2 with Ubuntu, then Git, Node.js and
+VS Code with the WSL extension. Keep your projects inside the Linux home folder, not under
+`/mnt/c`. The checker's first command, `npx academy doctor`, confirms the setup. No Docker.
 
 | Project | Outcome | Checker |
 | :--- | :--- | :--- |
@@ -126,7 +145,7 @@ Projects 3.1–3.3 are guided. From 3.4 you get the task, hints and the checker.
 **Goal.** Design a schema that cannot hold wrong data, write SQL with confidence, and recover
 from loss.
 
-**Rebuilds.** The GPIS data model in local PostgreSQL / local Supabase: students, classes,
+**Rebuilds.** The GPIS data model in your free Supabase cloud project: students, classes,
 academic years and terms, and above all the **temporal model** — a student has no class
 column; class membership is a dated record; every score points to the membership it was
 earned under.
@@ -138,7 +157,14 @@ earned under.
 | 4.3 Scores that explain themselves | Scores store their maxima and their membership; CHECK constraints | `sql`: over-maximum refused; old term still shows the old class |
 | 4.4 Row-Level Security | RLS on every table; deny by default; role from `app_metadata` | `sql`: as each role, allowed and refused queries; no table without RLS |
 | 4.5 Reports in SQL | Class list, ranking and "who counts" (open membership **and** active) | `sql`: results equal the expected rows, including a withdrawn student |
-| 4.6 Backup, restore, replica | Restore deleted data from a backup; show that a replica copies deletions too | `doc`: measured data-loss window and restore time; `sql`: restored rows present |
+| 4.6 Backup, restore, replica **[Docker]** | Restore deleted data from a backup; show that a replica copies deletions too | `doc`: measured data-loss window and restore time; `sql`: restored rows present |
+
+Projects 4.1–4.5 use the Supabase cloud project: migrations are applied with the Supabase
+CLI, and you can reset the lab database at any time. Project 4.6 needs two PostgreSQL
+servers you control, which the free cloud plan does not give, so it runs in Docker. Without
+Docker you can still do the backup-and-restore half against the cloud project (dump, delete,
+restore into a second free project) and read the replica half as a worked example; the
+checker marks 4.6 "partly done" in that case.
 
 ## Module 5 — Backend and auth in Next.js (7 weeks, half guided)
 
@@ -168,7 +194,7 @@ stays single-school; you design what would have to change, and why GPIS was righ
 | :--- | :--- | :--- |
 | 6.1 Capacity estimate | Users, requests, rows and storage for 50 schools in report-card week | `doc`: numbers with stated assumptions; totals add up (checker recomputes) |
 | 6.2 Multi-tenancy options | Compare one database per school, one schema per school, shared tables with a school id | `doc`: trade-off table: isolation, cost, migrations, RLS, backup, restore |
-| 6.3 Scaling reads and caching | Find the three heaviest GPIS reads; design caching and when to clear it | `doc`: what is cached, for how long, what makes it stale; `sql`: a query plan before and after an index |
+| 6.3 Scaling reads and caching | Find the three heaviest GPIS reads; design caching and when to clear it | `doc`: what is cached, for how long, what makes it stale; `sql`: a query plan before and after an index (cloud project) |
 | 6.4 Queues and slow work | Design PDF making and bulk SMS as background jobs with retries | `doc`: sequence diagram, retry and duplicate rules, what the user sees |
 | 6.5 Rate limits and abuse | Limits for login, search and exports; what happens at the limit | `doc`: limits with reasons; `tests`: a small local rate limiter passes the suite |
 | 6.6 Design review | One design document for the whole case, then a written defence | `doc`: required sections present; self-review checklist completed |
@@ -187,11 +213,13 @@ encrypted backups and restore tests, and its habit of writing down incidents.
 | 7.2 Security review | Review your own app: RLS, definer functions, actions, storage, secrets | `doc`: findings table with evidence; `sql`: anonymous visitor reaches only the listed functions |
 | 7.3 CI pipeline | Lint, types, build and tests on every push; build fails on a secret in `src/` | `files`: workflow present; `git`: a seeded bad commit is rejected locally by the same script |
 | 7.4 Deploy and configure | Staging on Vercel free tier and Supabase; settings written as repeatable steps | `doc`: runbook; `page`: deployed login works; second run changes nothing |
-| 7.5 Web stack debugging | Repair a broken local setup: wrong route, wrong permission, used-up connections | `tests`: service healthy after restart; `doc`: hypotheses and evidence |
-| 7.6 Incident and postmortem | Diagnose a seeded outage, restore service, write a blameless report | `doc`: impact, timeline, causes, follow-ups; `sql`: data restored |
+| 7.5 Web stack debugging **[Docker]** | Repair a broken set of containers: wrong route, wrong permission, used-up connections | `tests`: service healthy after restart; `doc`: hypotheses and evidence |
+| 7.6 Incident and postmortem | Diagnose a seeded outage in your staging app and cloud project, restore service, write a blameless report | `doc`: impact, timeline, causes, follow-ups; `sql`: data restored |
 
 Projects 7.1–7.3 are half guided; 7.4–7.6 give requirements only. The traffic lab (plain
-versus encrypted login on a local teaching network) is an optional extra in 7.2.
+versus encrypted login on a local teaching network) is an optional **[Docker]** extra in 7.2.
+7.5 is the only required project in this module that needs Docker; without it, do the
+written diagnosis from the supplied logs and the checker marks it "partly done".
 
 ## Module 8 — Algorithms and problem solving (4 focused weeks, practised from Module 2 on)
 
@@ -246,7 +274,7 @@ read-only reporting service for class results, called by the Next.js app.
 | P.1 Python core | Port the grading, ranking and aggregate rules from Module 2 to typed Python | `tests`: same cases as Module 2; type check passes |
 | P.2 Log report again | Redo project 1.2 as a structured Python program | `tests`: same inputs, same report; odd input handled |
 | P.3 API consumer | Export from a local paginated API: timeouts, 429, repeated cursor, safe CSV | `tests`: a local fake API that misbehaves on purpose |
-| P.4 FastAPI service | `/results/class/{id}` reads your database with a read-only role | `tests`: contract tests; wrong token refused; `sql`: role cannot write |
+| P.4 FastAPI service | `/results/class/{id}` reads your Supabase database with a read-only role; runs in WSL (a container is an optional **[Docker]** extra) | `tests`: contract tests; wrong token refused; `sql`: role cannot write |
 | P.5 Join the two | Next.js calls the service; clear behaviour when the service is down | `page`: results shown; error state when the service is stopped |
 | P.6 Was it worth it? | One page: what the second service cost and gave | `doc`: required headings; self-review |
 
