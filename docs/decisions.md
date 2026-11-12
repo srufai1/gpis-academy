@@ -157,3 +157,10 @@ public result early.
 | Redis, Celery / background workers | Cut | Nothing in a one-learner tool needs them |
 | Expo mobile app, offline sync | Cut | The site is responsive; that is enough |
 | Team projects, peer review | Postponed | One learner |
+
+## Known limits (accepted for now)
+
+| Limit | Why it is accepted | When to fix |
+| :--- | :--- | :--- |
+| A learner can insert their own `quiz_attempts` row with any score by calling the database directly (the table allows inserting own rows). | One learner; it only cheats themselves. The app always marks on the server. | Before selling the course, or before quiz scores count towards anything: mark quizzes in a database function with the answers stored server-side, the same kind of single door as `check_runs`. |
+| The local checker cannot prove the checks really ran (the learner controls the machine). | See `checker.md`; the signature proves which device sent a result. | When selling: the server re-runs checks for important projects. |
