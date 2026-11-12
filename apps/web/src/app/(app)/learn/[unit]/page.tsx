@@ -5,6 +5,7 @@ import { LessonView } from "@/components/views/lesson-view";
 import { requireLearner } from "@/lib/auth/learner";
 import { getUnit, moduleOfUnit, publicQuiz } from "@/lib/content/load";
 import { renderMarkdown } from "@/lib/content/markdown";
+import { stripTitle } from "@/lib/content/sections";
 import { readProgress } from "@/lib/progress/read";
 import { Quiz, type LastAttempt } from "./quiz";
 import { submitQuiz } from "./quiz-actions";
@@ -39,7 +40,7 @@ export default async function LessonPage({ params }: Props) {
       moduleLabel={`Module ${mod.label ?? mod.number}`}
       label={`${mod.label ?? mod.number}.${unit.meta.position}`}
       title={unit.meta.title}
-      lessonHtml={renderMarkdown(unit.lesson)}
+      lessonHtml={renderMarkdown(stripTitle(unit.lesson))}
       exampleHtml={renderMarkdown(unit.example)}
       gpisPart={unit.meta.gpis_part}
       read={read}
