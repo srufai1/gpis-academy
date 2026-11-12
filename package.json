@@ -17,6 +17,7 @@
     "test": "node scripts/run-tests.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
     "@types/node": "^22",
     "eslint": "^9",
     "typescript": "^5",
