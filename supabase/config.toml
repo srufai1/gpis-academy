@@ -1,0 +1,26 @@
+# Supabase CLI configuration for local development (`npx supabase start`, needs Docker).
+# The hosted project is configured in the Supabase dashboard; nothing here holds a secret.
+project_id = "gpis-academy"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+
+[db]
+port = 54322
+major_version = 17
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
