@@ -22,9 +22,10 @@ Read `decisions.md` first. This file lists the modules in order.
 
 ## The local checker
 
-A small command-line tool you run in your project folder (inside WSL). It uploads nothing.
-It needs the network only for `sql` checks, which connect to **your own** Supabase project
-with the connection details in your local `.env` file.
+A small command-line tool you run in your project folder (inside WSL). It never uploads your
+code. It sends only a signed result (pass or fail per check) to the platform; see
+`checker.md`. `sql` checks connect to **your own** Supabase project with the connection
+details in your local `.env` file.
 
 ```bash
 npx academy check m2-p1
