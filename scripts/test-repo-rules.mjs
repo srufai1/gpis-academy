@@ -2,6 +2,7 @@
  * Repository rules (AGENTS.md):
  * 1. No secret key or service-role key anywhere under a src/ folder.
  * 2. .env.example holds variable names only, never a value.
+ * 3. The site name is typed only in apps/web/src/config/site.ts.
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -37,6 +38,13 @@ for (const line of example.split(/\r?\n/)) {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith("#")) continue;
   assert.match(trimmed, /^[A-Z][A-Z0-9_]*=$/, `.env.example must hold names only: ${trimmed}`);
+  checks++;
+}
+
+// 3. The site name is typed only in apps/web/src/config/site.ts (AGENTS.md rule 3).
+for (const file of inSrc.filter((f) => relative(root, f).startsWith("apps/web/src/"))) {
+  if (relative(root, file) === "apps/web/src/config/site.ts") continue;
+  assert.ok(!readFileSync(file, "utf8").includes("GPIS Academy"), `site name typed outside site.ts: ${relative(root, file)}`);
   checks++;
 }
 

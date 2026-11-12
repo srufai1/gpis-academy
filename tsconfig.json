@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["packages/*/src/**/*.ts"]
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "jsx": "react-jsx",
+    "paths": { "@/*": ["./apps/web/src/*"] }
+  },
+  "include": ["packages/*/src/**/*.ts", "apps/web/src/**/*.ts", "apps/web/src/**/*.tsx", "apps/web/next-env.d.ts"]
 }
