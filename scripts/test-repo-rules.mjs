@@ -26,8 +26,16 @@ let checks = 0;
 const files = walk(root);
 const inSrc = files.filter((f) => relative(root, f).split(/[\\/]/).includes("src"));
 assert.ok(inSrc.length > 0, "there are src/ files to scan");
+// The one exception: the checker's git step SEARCHES learners' history for these words, so it
+// must name them as patterns. It holds no key. Any other file under src/ may not contain them.
+const SECRET_PATTERN_FILES = new Set(["packages/checker/src/steps/git.ts"]);
 for (const file of inSrc) {
   const text = readFileSync(file, "utf8");
+  if (SECRET_PATTERN_FILES.has(relative(root, file).split("\\").join("/"))) {
+    assert.ok(!/sb_secret_[A-Za-z0-9_-]{10,}/.test(text.replace("sb_secret_[A-Za-z0-9_-]{10,}", "")), `a real-looking secret key in ${relative(root, file)}`);
+    checks++;
+    continue;
+  }
   assert.ok(!text.includes("sb_secret_"), `secret key found in ${relative(root, file)}`);
   assert.ok(!/service_role/i.test(text), `service_role found in ${relative(root, file)}`);
   checks++;
