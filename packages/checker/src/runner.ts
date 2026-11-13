@@ -11,6 +11,13 @@ export type StepContext = {
   workDir: string;
   /** The check's own folder (fixtures, tests). */
   checkDir: string;
+  /** Opens the lab database (tests pass PGlite; the CLI uses pg). */
+  connect?: (connectionString: string) => Promise<SqlClient>;
+};
+export type SqlClient = {
+  exec(sql: string): Promise<unknown>;
+  query(sql: string): Promise<{ rows: Record<string, unknown>[] }>;
+  end(): Promise<void>;
 };
 export type StepDefinition = Record<string, unknown> & { id: string; kind: string; title: string; required: boolean };
 export type StepOutput = { outcome: StepOutcome; reasons?: string[] };
