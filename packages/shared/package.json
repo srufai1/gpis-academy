@@ -6,7 +6,10 @@
   "exports": {
     ".": "./src/index.ts",
     "./content-schema": "./src/content-schema.ts",
-    "./content-load": "./src/content-load.ts"
+    "./content-load": "./src/content-load.ts",
+    "./canonical": "./src/canonical.ts",
+    "./result-schema": "./src/result-schema.ts",
+    "./signing": "./src/signing.ts"
   },
   "dependencies": {
     "yaml": "^2.8.2"
