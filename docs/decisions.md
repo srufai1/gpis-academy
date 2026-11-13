@@ -117,6 +117,68 @@ public result early.
 
 ---
 
+## ADR-7 — The CLI signs in as the learner (email code); the device key only signs results
+
+Date: 13 November 2026.
+
+**Problem.** The check-run routes accept only a signed-in learner (`protocol.md` §8, step 1),
+but the `academy` CLI runs in a terminal and has no session. The first plan for T18 (a code
+approved in the browser) gave the CLI a device key, not a session. The app holds no secret key
+to make a session, and signed-out callers can run no database function (T04).
+
+**Decision.** `academy login` signs the CLI in **as the learner**, with a one-time code sent
+by email and typed into the terminal (Supabase Auth email OTP). The CLI keeps its own session
+and sends the access token as `Authorization: Bearer` to the platform. The device key stays,
+with one job: sign results.
+
+| Question | Answered by |
+| :--- | :--- |
+| Who is calling? | The session (access token), checked with `getClaims()` |
+| Which install sent this result, and was it changed? | The device key (Ed25519 signature) |
+
+**Why this one.**
+- It keeps every rule already built and tested: RLS as it is, `user_id = auth.uid()` in every
+  function, signed-out callers reach nothing, no secret key in the app.
+- It needs no new table and no approval-code machinery; T18 gets smaller.
+- It uses Supabase Auth as it is meant to be used; nothing home-made stands in for a login.
+
+**Rejected.**
+- *Browser approval code, CLI never signs in (option B).* Needs database functions that a
+  signed-out caller can run, guarded only by a route stamp; a table of pending codes; and the
+  learner's id passed as a parameter instead of `auth.uid()`. That moves all trust onto one
+  HMAC key and breaks the T04 rule that signed-out callers run no function.
+- *Hand the browser's session to the CLI.* Supabase refresh tokens are single-use; two clients
+  sharing one session log each other out.
+- *Type the account password into the CLI.* Works without email, but teaches a bad habit and
+  stops working the day sign-in is no longer by password.
+
+**Consequences.**
+- `academy login`: ask for the email → Supabase sends a code → the learner types it → the CLI
+  holds a session → it makes the device key pair → it registers the public key through
+  `register_device()`. No browser step. The code never creates an account
+  (`shouldCreateUser: false`); the learner signs up on the platform first.
+- `register_device(public_key, label)` is `SECURITY DEFINER`, `search_path = ''`, executable
+  by `authenticated` only, sets `user_id = auth.uid()`, checks the key format, and limits a
+  learner to 5 devices that are not revoked.
+- The CLI stores two secrets in the learner's home folder, both with file mode 600: the device
+  private key and the session (refresh token). It refreshes the access token when needed and
+  saves the new refresh token before using it. If refreshing fails it says "run
+  `academy login` again".
+- The CLI routes (`/api/devices`, `/api/check-runs/*`) accept **only** a Bearer token, never
+  the browser cookie, so a web page cannot trigger them. The proxy lets them through; each
+  route answers 401 itself.
+- The CLI learns the Supabase URL and publishable key (both public) from the platform
+  (`GET /api/cli/config`). It talks to Supabase Auth directly only to sign in and to refresh;
+  everything else goes through the platform's routes.
+- `protocol.md` v1 does not change: same payload, same signature, same stamps. §8 step 1 now
+  says how the learner is known.
+- **Owner setup (runbook, T24):** the Supabase "Magic Link" email template must show
+  `{{ .Token }}`; email one-time codes must be enabled. The built-in email sender is limited
+  (a few emails an hour, project members only), which is enough for one learner; a custom SMTP
+  sender is needed before a second learner.
+- Revoking a device stops its results but does not end the CLI's session. `academy logout`
+  ends the session on that machine; "sign out everywhere" on the platform ends all of them.
+
 ## Blueprint sections cut or postponed
 
 "Cut" = not planned. "Postponed" = may return when there is more than one learner.
@@ -164,3 +226,4 @@ public result early.
 | :--- | :--- | :--- |
 | A learner can insert their own `quiz_attempts` row with any score by calling the database directly (the table allows inserting own rows). | One learner; it only cheats themselves. The app always marks on the server. | Before selling the course, or before quiz scores count towards anything: mark quizzes in a database function with the answers stored server-side, the same kind of single door as `check_runs`. |
 | The local checker cannot prove the checks really ran (the learner controls the machine). | See `checker.md`; the signature proves which device sent a result. | When selling: the server re-runs checks for important projects. |
+| The CLI's session has the same rights as the learner in the browser (it is the learner's own session), and its refresh token is a file on the learner's machine. | One learner, their own machine; the file is mode 600, like the device key. See ADR-7. | When selling, or if the CLI ever runs on shared machines: give the CLI a narrower token (only "send results"). |

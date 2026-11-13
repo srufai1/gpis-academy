@@ -22,7 +22,12 @@ CLI                                   Platform
 ```
 
 The CLI posts **four strings**: `challenge`, `stamp`, `payload`, `signature`. The platform
-trusts nothing else in the request.
+trusts nothing else in the request body.
+
+**Who is calling** is not part of this format. Every request from the CLI carries the
+learner's Supabase access token as `Authorization: Bearer <token>` (the CLI signs in with an
+email one-time code; `decisions.md`, ADR-7). The session says who the learner is; the device
+signature says which install sent the result and that it was not changed. Both are required.
 
 ## 2. Canonical JSON
 
@@ -146,7 +151,7 @@ does not verify here.
 
 | # | Check | Refusal |
 | :--- | :--- | :--- |
-| 1 | The request is from a signed-in learner (`getClaims()`); body is four strings within size limits | 401 / 400 |
+| 1 | The request carries `Authorization: Bearer <access token>`; `getClaims()` verifies it and gives the learner. A browser cookie is **not** accepted on these routes. Body is four strings within size limits | 401 / 400 |
 | 2 | Read the challenge only to find `device_id` and `check`; look up the device (must belong to the signed-in learner, `revoked_at is null`) and the `check_definitions` row for `check.id` + `check.version` (its `sha256` is the expected hash) | device or check not found |
 | 3 | The challenge stamp is the platform's own (constant-time compare) | `challenge_stamp` |
 | 4 | The challenge is canonical and well formed | `challenge_malformed` |
@@ -160,6 +165,11 @@ does not verify here.
 | 12 | In the function: recompute the stamp; `user_id = auth.uid()`; device not revoked; insert. The `nonce` is UNIQUE, so a second use fails: answer "already recorded" | replay |
 
 Rules T19 must keep:
+
+- **Bearer only (ADR-7).** The route builds its Supabase client from the Bearer token, with
+  no cookies, so `record_check_run()` runs as that learner and `auth.uid()` is right. The
+  proxy must let `/api/check-runs/*` and `/api/devices` through without the cookie redirect;
+  the route itself answers 401 as JSON. The challenge route follows the same rule.
 
 - **Reuse of a challenge is stopped only by the database** (`check_runs.nonce` is unique). The
   format cannot see reuse; `verifySubmission()` accepts the same submission twice.

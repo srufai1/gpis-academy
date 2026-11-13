@@ -5,7 +5,7 @@ agent rules. `CLAUDE.md` only points here.
 
 ## Read first
 
-1. `docs/decisions.md` — the decisions (ADR-1 to ADR-6). Do not reopen them.
+1. `docs/decisions.md` — the decisions (ADR-1 to ADR-7). Do not reopen them.
 2. `docs/platform.md` and `docs/checker.md` — what is being built.
 3. `docs/roadmap.md` — the numbered tasks. Build one task at a time.
 4. The mockup named in the task (`docs/mockups/`), and `content/README.md` for course files.

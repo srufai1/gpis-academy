@@ -13,7 +13,8 @@ Everything happens in the VS Code terminal, opened in the project folder inside 
 | Step | Command | What happens |
 | :--- | :--- | :--- |
 | Once | `npx academy doctor` | Confirms WSL, Node, Git and (if needed) the lab database connection |
-| Once | `npx academy login` | Shows a short code and a link; the learner approves it in the browser; the device is registered |
+| Once | `npx academy login` | Asks for your email; you type the one-time code from the email; the CLI is signed in and this machine is registered as a device (ADR-7) |
+| Any time | `npx academy logout` | Ends the CLI's session on this machine |
 | Each project | `npx academy check m2-p1` | Runs the checks, prints pass or fail with reasons, sends the result |
 | Any time | `npx academy check m2-p1 --dry-run` | Same checks, nothing sent |
 | Any time | `npx academy status` | Shows what the platform has recorded |
@@ -83,16 +84,18 @@ sequenceDiagram
     participant D as Database
   end
 
-  Note over C,P: Once: login registers this device
-  L->>C: academy login
+  Note over C,P: Once: login (ADR-7)
+  L->>C: academy login (email)
+  C->>D: ask Supabase Auth for an email code
+  L->>C: type the code from the email
+  D-->>C: session (access + refresh token)
   C->>C: make key pair, keep private key
-  C->>P: public key + approval code
-  L->>P: approve in browser (signed in)
-  P->>D: store device (public key)
+  C->>P: public key (Bearer token)
+  P->>D: register_device() as the learner
 
   Note over L,D: Each check
   L->>C: academy check m2-p1
-  C->>P: ask for a challenge (check id, version)
+  C->>P: ask for a challenge (Bearer token)
   P-->>C: nonce, expires in 15 min (stamped by server)
   C->>C: run steps on the project
   C->>C: build result, sign with private key
@@ -120,9 +123,14 @@ the check, cut to a fixed length.
 
 ### The signing scheme (simple, standard parts)
 
-1. **Device key.** `academy login` makes an Ed25519 key pair. The private key stays in the
-   learner's home folder (file mode 600). The public key is stored in `devices` after the
-   learner approves the device while signed in on the platform.
+0. **Session (who is calling).** `academy login` signs the CLI in as the learner with a
+   one-time code sent by email (ADR-7). The CLI keeps the session (refresh token, file mode
+   600) and sends the access token as `Authorization: Bearer` on every request. The platform
+   reads the learner from that token only; the CLI routes ignore browser cookies.
+1. **Device key (which install, unchanged result).** After signing in, `academy login` makes
+   an Ed25519 key pair. The private key stays in the learner's home folder (file mode 600).
+   The public key is stored in `devices` by `register_device()`, which runs as the signed-in
+   learner. There is no browser approval step.
 2. **Challenge.** Before running, the CLI asks for a nonce. The platform returns a random
    nonce with the user, check and expiry, and an HMAC "stamp" made with a server-only key.
    Nothing is stored yet.
@@ -138,7 +146,8 @@ the check, cut to a fixed length.
 
 All traffic is HTTPS. The server-only key lives in the hosting environment's settings, never
 in the repo and never in client code. A learner can revoke a device on the platform; its
-later results are refused.
+later results are refused. Revoking a device does not end the CLI's session: `academy logout`
+does that on the machine, and "sign out everywhere" on the platform ends every session.
 
 ### What this stops
 

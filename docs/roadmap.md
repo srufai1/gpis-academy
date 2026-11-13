@@ -271,23 +271,55 @@ npm test
 
 ## Phase 4 — Results
 
-### T18 — Device login
-- **Needs.** T04, T12, T13.
-- **Goal.** `academy login` registers this machine as a device of the signed-in learner.
-- **Files.** `packages/checker/src/commands/login.ts`, `src/app/api/devices/route.ts`,
-  `src/app/(app)/me/devices/` (approve a code, list devices, revoke), a migration for the
-  device-registration function.
-- **Accept.** The private key never leaves the machine and is stored with mode 600. The
-  approval code is short-lived and single-use. A device is created only by a signed-in
-  learner approving the code. Revoke sets `revoked_at`; nothing is deleted.
-- **Tests.** `scripts/test-device-login.mjs` (offline, fake platform): expired code, reused
-  code, approval by another user refused.
+### T18 — CLI sign-in and device registration
+- **Needs.** T04, T12, T13. **Read.** `decisions.md` ADR-7.
+- **Goal.** `academy login` signs the CLI in as the learner with an email one-time code, then
+  registers this machine as a device. `academy logout` ends that session.
+- **Files.**
+  - `packages/checker/src/commands/{login,logout}.ts`, `packages/checker/src/session.ts`
+    (store, refresh, Bearer header), `packages/checker/src/device-key.ts`;
+  - `apps/web/src/app/api/cli/config/route.ts` (public: Supabase URL and publishable key);
+  - `apps/web/src/app/api/devices/route.ts` (POST, Bearer only: register this device);
+  - `apps/web/src/lib/auth/bearer.ts` (a Supabase client from a Bearer token, no cookies;
+    T19 reuses it), and the proxy exception for `/api/cli/*`, `/api/devices`,
+    `/api/check-runs/*`;
+  - `apps/web/src/app/(app)/me/devices/` (list devices, revoke; no approval step);
+  - a migration for `register_device(public_key text, label text)`.
+- **Accept.**
+  - Login: email → Supabase sends a code (`shouldCreateUser: false`) → the learner types it
+    → session. At most 3 tries per code. An unknown email gets the same message as a wrong
+    code.
+  - The session file and the private key are separate files, both mode 600, in the CLI's
+    folder under the learner's home. Neither is ever printed or sent to the platform.
+  - The CLI refreshes an expired access token, writes the new refresh token to disk before
+    using it (temp file, then rename), and says "run `academy login` again" when refreshing
+    fails.
+  - `register_device()` is `SECURITY DEFINER`, `search_path = ''`, executable by
+    `authenticated` only (not `public`, not `anon`); sets `user_id = auth.uid()`; accepts
+    only `ed25519:` + 43 base64url characters (`isDevicePublicKey`); refuses a key already
+    registered; refuses a 6th device that is not revoked; returns the device id.
+  - `/api/devices` accepts only `Authorization: Bearer`; a request with only a browser
+    cookie gets 401. Label is one line, at most 80 characters, checked on the CLI, the route
+    and the database.
+  - Revoke sets `revoked_at`; nothing is deleted. Logging in again on the same machine keeps
+    the existing key and device when the device is still valid.
+- **Tests.**
+  - `scripts/test-device-register-db.mjs` (PGlite): own device created; signed-out caller
+    refused; bad key, duplicate key and 6th device refused; another learner cannot see it.
+  - `scripts/test-cli-login.mjs` (offline, fake Supabase Auth and fake platform): happy path;
+    wrong code; expired code; refresh rotates and is saved; refresh failure asks to log in
+    again; file modes are 600; no token appears in the CLI's output.
+  - Update `scripts/test-schema-rls.mjs`: the list of functions now includes
+    `register_device`; signed-out callers still run none.
+- **Not in this task.** The owner's Supabase settings (email template shows `{{ .Token }}`,
+  email codes enabled): written into the runbook by T24, done by the owner.
 
 ### T19 — Challenge, verification and recording — **ARCHITECT**
-- **Needs.** T04, T12, T18.
+- **Needs.** T04, T12, T18. **Read.** `protocol.md` §8, `decisions.md` ADR-7.
 - **Goal.** The two routes and the one database function through which a result enters:
   issue a challenge; verify stamp, device, signature, version and schema; call
-  `record_check_run()`.
+  `record_check_run()`. Both routes take the learner from the CLI's Bearer token (the
+  `bearer.ts` helper from T18), never from a cookie.
 - **Why architect.** This is the only door into `check_runs`. It mixes a server-only key,
   a database-held key, replay protection and RLS; a mistake is either a lockout or a forgery
   path.
@@ -296,7 +328,8 @@ npm test
   `scripts/test-check-run-security.mjs`.
 - **Accept.** Every case in "What this stops" of `checker.md` has a failing test: altered
   result, replayed nonce, other learner's device, revoked device, unpublished version, direct
-  call of the function without the route's stamp.
+  call of the function without the route's stamp. Also: no Bearer token, an expired token,
+  and a cookie-only request each get 401.
 
 ### T20 — Send results and show them
 - **Needs.** T19, T10, T11.
