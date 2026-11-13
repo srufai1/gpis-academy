@@ -21,14 +21,18 @@ const HELP = `academy ${CHECKER_VERSION} — checks your Ruftech Academy work on
   npx academy logout                 sign out on this computer
   npx academy init <id> [--reset]    set up a project's lab folder
   npx academy check <id> [--dry-run] check your work and send the result
+  npx academy check <id> --at=<commit>  check an earlier commit (your folder is not touched)
   npx academy status [<id>]          what the platform has recorded
   npx academy --version`;
 
 export async function main(argv: string[], print: (line: string) => void = console.log, printError: (line: string) => void = console.error): Promise<number> {
   const [command, ...rest] = argv;
   const flags = new Set(rest.filter((a) => a.startsWith("--")));
-  const args = rest.filter((a) => !a.startsWith("--"));
+  const args = rest.filter((a, i) => !a.startsWith("--") && !(i > 0 && rest[i - 1] === "--at"));
   const urlFlag = rest.find((a) => a.startsWith("--url="))?.slice("--url=".length);
+  // --at=<commit> or --at <commit>
+  const atIndex = rest.indexOf("--at");
+  const atFlag = rest.find((a) => a.startsWith("--at="))?.slice("--at=".length) ?? (atIndex >= 0 ? rest[atIndex + 1] : undefined);
   const dirFlag = rest.find((a) => a.startsWith("--dir="))?.slice("--dir=".length);
   try {
     switch (command) {
@@ -37,7 +41,7 @@ export async function main(argv: string[], print: (line: string) => void = conso
       case "logout": return await logout({ fetch, print });
       case "status": return await status(args[0], { fetch, print });
       case "init": return requireId(args[0]) && init(args[0]!, flags.has("--reset"), print);
-      case "check": return requireId(args[0]) && (await check(args[0]!, { dryRun: flags.has("--dry-run"), ...(dirFlag ? { dir: dirFlag } : {}) }, STEP_KINDS, print));
+      case "check": return requireId(args[0]) && (await check(args[0]!, { dryRun: flags.has("--dry-run"), ...(dirFlag ? { dir: dirFlag } : {}), ...(atFlag ? { at: atFlag } : {}) }, STEP_KINDS, print));
       case "--version": case "-v": print(CHECKER_VERSION); return 0;
       case undefined: case "help": case "--help": case "-h": print(HELP); return 0;
       default: printError(`Unknown command "${command}".\n\n${HELP}`); return 2;
