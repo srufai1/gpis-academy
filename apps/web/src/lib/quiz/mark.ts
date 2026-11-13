@@ -2,7 +2,7 @@
  * Quiz marking (T09). Pure. Runs only on the server: it needs the answers.
  * An unanswered or invalid answer counts as wrong; unknown question ids are ignored.
  */
-import type { Quiz } from "@gpis-academy/shared/content-schema";
+import type { Quiz } from "@ruftech-academy/shared/content-schema";
 
 export type MarkedQuestion = { id: string; chosen: number | null; correct: boolean; reason: string };
 export type QuizResult = { score: number; total: number; passMark: number; passed: boolean; questions: MarkedQuestion[] };

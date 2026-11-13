@@ -9,8 +9,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
-import { validateCheck } from "@gpis-academy/shared/content-schema";
-import { folderHash } from "@gpis-academy/shared/content-load";
+import { validateCheck } from "@ruftech-academy/shared/content-schema";
+import { folderHash } from "@ruftech-academy/shared/content-load";
 import { CheckerError } from "./errors.ts";
 
 export type LoadedCheck = {

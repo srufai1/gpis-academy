@@ -2,8 +2,8 @@
  * POST /api/devices, without Next.js or Supabase (T18). The route gives it the body and a
  * store that acts as the signed-in learner; tests give it a fake one.
  */
-import { isDeviceLabel, MAX_ACTIVE_DEVICES } from "@gpis-academy/shared/device";
-import { isDevicePublicKey } from "@gpis-academy/shared/signing";
+import { isDeviceLabel, MAX_ACTIVE_DEVICES } from "@ruftech-academy/shared/device";
+import { isDevicePublicKey } from "@ruftech-academy/shared/signing";
 
 export type RegisterOutcome = { id: string } | { error: "key_in_use" | "too_many" | "invalid" | "failed" };
 

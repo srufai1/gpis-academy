@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
-import type { PublicQuiz } from "@gpis-academy/shared/content-schema";
+import type { PublicQuiz } from "@ruftech-academy/shared/content-schema";
 import { Button } from "@/components/ui/button";
 import type { QuizResult } from "@/lib/quiz/mark";
 import type { QuizActionResult } from "./quiz-actions";

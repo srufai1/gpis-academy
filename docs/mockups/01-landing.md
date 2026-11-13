@@ -2,7 +2,7 @@
 
 ```text
 ┌──────────────────────────────────────┐
-│ GPIS Academy                 Sign in │
+│ Ruftech Academy                 Sign in │
 ├──────────────────────────────────────┤
 │                                      │
 │  Learn software engineering          │

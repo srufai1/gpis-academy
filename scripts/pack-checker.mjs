@@ -1,6 +1,6 @@
 /**
  * Packs the checker for a GitHub release (T17).
- *   node scripts/pack-checker.mjs   →  packages/checker/release/gpis-academy-checker-<version>.tgz
+ *   node scripts/pack-checker.mjs   →  packages/checker/release/ruftech-academy-checker-<version>.tgz
  *
  * The package holds: bin/academy.mjs, dist/academy.mjs (one bundled file: the CLI, the shared
  * code, yaml and pg) and checks/ (only the check/ folders of content/). Lessons, quizzes and
@@ -49,16 +49,16 @@ for (const dir of walk(content)) cpSync(dir, join(stage, "checks", relative(cont
 mkdirSync(join(stage, "bin"));
 cpSync(join(pkgDir, "bin", "academy.mjs"), join(stage, "bin", "academy.mjs"));
 writeFileSync(join(stage, "package.json"), `${JSON.stringify({
-  name: "@gpis-academy/checker",
+  name: "@ruftech-academy/checker",
   version,
-  description: "Checks your GPIS Academy work on your own computer",
+  description: "Checks your Ruftech Academy work on your own computer",
   type: "module",
   bin: { academy: "bin/academy.mjs" },
   files: ["bin", "dist", "checks"],
   engines: { node: ">=22.18" },
   license: "UNLICENSED",
 }, null, 2)}\n`);
-writeFileSync(join(stage, "README.md"), "# academy\n\nThe GPIS Academy checker. Install and use: see docs/checker-install.md in the course repository.\n");
+writeFileSync(join(stage, "README.md"), "# academy\n\nThe Ruftech Academy checker. Install and use: see docs/checker-install.md in the course repository.\n");
 
 const pack = spawnSync("npm", ["pack", "--pack-destination", out, "--silent"], { cwd: stage, encoding: "utf8" });
 if (pack.status !== 0) throw new Error(pack.stderr);

@@ -1,4 +1,4 @@
-# GPIS Academy
+# Ruftech Academy
 
 Learn software engineering by rebuilding a real system, step by step.
 

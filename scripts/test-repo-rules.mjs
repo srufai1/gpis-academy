@@ -52,7 +52,7 @@ for (const line of example.split(/\r?\n/)) {
 // 3. The site name is typed only in apps/web/src/config/site.ts (AGENTS.md rule 3).
 for (const file of inSrc.filter((f) => relative(root, f).startsWith("apps/web/src/"))) {
   if (relative(root, file) === "apps/web/src/config/site.ts") continue;
-  assert.ok(!readFileSync(file, "utf8").includes("GPIS Academy"), `site name typed outside site.ts: ${relative(root, file)}`);
+  assert.ok(!readFileSync(file, "utf8").includes("Ruftech Academy"), `site name typed outside site.ts: ${relative(root, file)}`);
   checks++;
 }
 

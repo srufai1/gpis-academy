@@ -5,7 +5,7 @@
  *
  * Safety:
  * - The connection is LAB_DATABASE_URL in the project's .env, nothing else.
- * - The lab guard: the database must hold public.academy_lab with purpose = 'gpis-academy lab'
+ * - The lab guard: the database must hold public.academy_lab with purpose = 'ruftech-academy lab'
  *   (made in the course's database setup). Without it the step stops before running anything,
  *   so a check never touches GPIS or any other real database.
  * - Everything runs in one transaction, in a scratch schema, and is ROLLED BACK: no change stays.
@@ -18,7 +18,7 @@ import { readEnvFile } from "./env-file.ts";
 
 export const LAB_URL_VARIABLE = "LAB_DATABASE_URL";
 export const LAB_GUARD_SQL = "select purpose from public.academy_lab limit 1";
-export const LAB_PURPOSE = "gpis-academy lab";
+export const LAB_PURPOSE = "ruftech-academy lab";
 
 type Query = { sql?: string; expect_rows?: unknown[]; expect_count?: number; expect_error?: boolean };
 

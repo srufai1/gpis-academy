@@ -1,4 +1,4 @@
-# Decisions — GPIS Academy
+# Decisions — Ruftech Academy
 
 Short decision records (ADRs) for the course and its small study platform.
 They apply on top of `blueprint-v2.md`. Where the two differ, **this file wins**.
@@ -178,6 +178,30 @@ with one job: sign results.
   sender is needed before a second learner.
 - Revoking a device stops its results but does not end the CLI's session. `academy logout`
   ends the session on that machine; "sign out everywhere" on the platform ends all of them.
+
+## ADR-8 — The product is named Ruftech Academy
+
+Date: 13 November 2026. Decided by the owner.
+
+**Decision.** "GPIS Academy" becomes **Ruftech Academy** everywhere: the site name, the
+emails, the docs, the npm packages (`@ruftech-academy/shared`, `/checker`, `/web`), the
+checker tarball (`ruftech-academy-checker-<version>.tgz`), the repository
+(`srufai1/ruftech-academy`), and the three context lines of the signing format
+(`ruftech-academy/check-result/v1`, `ruftech-academy/challenge/v1`,
+`ruftech-academy/record/v1`). The course still rebuilds GPIS (ADR-1); "GPIS" stays wherever
+it means the school system the learner builds.
+
+**Why now.** No result has been signed or recorded yet (T19 is not built), so changing the
+context lines costs nothing: there is no old signature to keep valid. Later it would mean two
+protocol versions.
+
+**Consequences.**
+- `protocol.md` keeps version `v1`; only the context text changed. The challenge stamp, the
+  signature and the record stamp in §9 were recomputed with plain `node:crypto`, independently
+  of `signing.ts`, and both agree. Keys, payload and its SHA-256 are unchanged.
+- The lab database marker is now `purpose = 'ruftech-academy lab'`.
+- Owner steps: rename the GitHub repository; optionally rename the Supabase project. GitHub
+  redirects the old address, so nothing breaks in between.
 
 ## Blueprint sections cut or postponed
 

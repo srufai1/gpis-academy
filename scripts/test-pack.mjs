@@ -46,7 +46,7 @@ try {
   ok(JSON.parse(readFileSync(join(lab, ".vscode", "tasks.json"), "utf8")).tasks[0].command === "npx academy check m1-p1", "init writes the VS Code task");
   const check = academy("check", "m1-p1", "--dry-run");
   ok(check.status === 1 && check.stdout.includes("Result: NOT PASSED · dry run, nothing sent"), `npx academy check m1-p1 --dry-run works (fresh lab: not passed)\n${check.stdout}${check.stderr}`);
-  ok(!existsSync(join(project, "node_modules", "@gpis-academy", "checker", "checks", "module-01", "unit-01", "lesson.md")), "no lesson was installed");
+  ok(!existsSync(join(project, "node_modules", "@ruftech-academy", "checker", "checks", "module-01", "unit-01", "lesson.md")), "no lesson was installed");
 } finally {
   rmSync(home, { recursive: true, force: true });
   rmSync(project, { recursive: true, force: true });

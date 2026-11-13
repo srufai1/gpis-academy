@@ -1,5 +1,5 @@
 {
-  "name": "gpis-academy",
+  "name": "ruftech-academy",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "dev": "npm run dev --workspace @gpis-academy/web",
+    "dev": "npm run dev --workspace @ruftech-academy/web",
     "build": "npm run build --workspaces --if-present",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

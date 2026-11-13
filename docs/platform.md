@@ -219,7 +219,7 @@ exists. The learner cannot set those two by hand.
 ## Folder structure
 
 ```text
-gpis-academy/
+ruftech-academy/
   docs/                    decisions, curriculum, platform, checker, mockups
   content/                 the course (original lessons only); see content/README.md
     module-01/

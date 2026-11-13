@@ -2,8 +2,8 @@ import "server-only";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { cache } from "react";
-import { loadCourse, type Course, type Unit } from "@gpis-academy/shared/content-load";
-import { toPublicQuiz, type CourseModule, type PublicQuiz } from "@gpis-academy/shared/content-schema";
+import { loadCourse, type Course, type Unit } from "@ruftech-academy/shared/content-load";
+import { toPublicQuiz, type CourseModule, type PublicQuiz } from "@ruftech-academy/shared/content-schema";
 
 /**
  * The course, read from content/ on the server (T05). Never import this into a

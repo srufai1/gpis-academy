@@ -1,7 +1,7 @@
 # Installing the checker
 
 The checker (`academy`) is installed from a **GitHub release**, not from npm. The release holds
-one file: `gpis-academy-checker-<version>.tgz`. It contains the bundled CLI and the `check/`
+one file: `ruftech-academy-checker-<version>.tgz`. It contains the bundled CLI and the `check/`
 folders only — never a lesson, a quiz or an answer key (`scripts/test-pack.mjs` proves this).
 
 ## For the learner
@@ -9,7 +9,7 @@ folders only — never a lesson, a quiz or an answer key (`scripts/test-pack.mjs
 In the project folder, inside WSL:
 
 ```bash
-npm i -D https://github.com/srufai1/gpis-academy/releases/download/checker-v0.1.0/gpis-academy-checker-0.1.0.tgz
+npm i -D https://github.com/srufai1/ruftech-academy/releases/download/checker-v0.1.0/ruftech-academy-checker-0.1.0.tgz
 npx academy doctor
 ```
 
@@ -47,7 +47,7 @@ unless that database has this marker, so it can never touch a real database by m
 
 ```sql
 create table public.academy_lab (purpose text not null);
-insert into public.academy_lab values ('gpis-academy lab');
+insert into public.academy_lab values ('ruftech-academy lab');
 ```
 
 Each `sql` step runs inside a transaction and a scratch schema, then rolls back.

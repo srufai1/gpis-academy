@@ -1,5 +1,5 @@
 {
-  "name": "@gpis-academy/web",
+  "name": "@ruftech-academy/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@gpis-academy/shared": "*",
+    "@ruftech-academy/shared": "*",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
     "class-variance-authority": "^0.7.1",

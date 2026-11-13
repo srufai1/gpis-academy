@@ -1,4 +1,4 @@
-import type { StepResult } from "@gpis-academy/shared/result-schema";
+import type { StepResult } from "@ruftech-academy/shared/result-schema";
 
 const LABEL = { pass: "PASS", fail: "FAIL", needs: "NEEDS", skipped: "SKIP" } as const;
 

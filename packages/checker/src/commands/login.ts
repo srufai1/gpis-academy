@@ -2,7 +2,7 @@
  * academy login (T18, ADR-7): sign in as the learner with an email one-time code, then
  * register this computer as a device. No browser step.
  */
-import { isDeviceLabel, DEVICE_LABEL_MAX } from "@gpis-academy/shared/device";
+import { isDeviceLabel, DEVICE_LABEL_MAX } from "@ruftech-academy/shared/device";
 import { CheckerError } from "../errors.ts";
 import { newDeviceKey, readDeviceKey, saveDeviceKey, type DeviceKey } from "../device-key.ts";
 import { authCall, readSession, saveSession, tokensFrom, type AuthConfig, type Fetch, type Session } from "../session.ts";

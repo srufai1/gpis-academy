@@ -5,17 +5,17 @@
  *
  * Three separate things, each with its own context line so one can never be
  * taken for another:
- *   1. the device signature  Ed25519 over  "gpis-academy/check-result/v1\n" + payload
- *   2. the challenge stamp   HMAC-SHA256 over "gpis-academy/challenge/v1\n" + challenge
- *   3. the record stamp      HMAC-SHA256 over "gpis-academy/record/v1\n" + five lines
+ *   1. the device signature  Ed25519 over  "ruftech-academy/check-result/v1\n" + payload
+ *   2. the challenge stamp   HMAC-SHA256 over "ruftech-academy/challenge/v1\n" + challenge
+ *   3. the record stamp      HMAC-SHA256 over "ruftech-academy/record/v1\n" + five lines
  */
 import { createHash, createHmac, createPrivateKey, createPublicKey, randomBytes, sign, timingSafeEqual, verify, type KeyObject } from "node:crypto";
 import { canonicalize, parseCanonical } from "./canonical.ts";
 import { CHALLENGE_KIND, LIMITS, PROTOCOL_VERSION, validateChallenge, validateResult, type Challenge, type CheckRef, type CheckResult } from "./result-schema.ts";
 
-export const RESULT_CONTEXT = "gpis-academy/check-result/v1\n";
-export const CHALLENGE_CONTEXT = "gpis-academy/challenge/v1\n";
-export const RECORD_CONTEXT = "gpis-academy/record/v1\n";
+export const RESULT_CONTEXT = "ruftech-academy/check-result/v1\n";
+export const CHALLENGE_CONTEXT = "ruftech-academy/challenge/v1\n";
+export const RECORD_CONTEXT = "ruftech-academy/record/v1\n";
 export const PUBLIC_KEY_PREFIX = "ed25519:";
 /** A server key must be at least this long (bytes). */
 export const MIN_KEY_BYTES = 32;

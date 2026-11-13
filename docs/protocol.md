@@ -94,7 +94,7 @@ Each step: `id` (slug, ≤ 60, unique), `kind` (`files` `doc` `git` `tests` `sta
 | Algorithm | Ed25519 (RFC 8032), from `node:crypto`; no other library |
 | Private key | A 32-byte seed, kept on the learner's machine (file mode 600). Never sent |
 | Public key, as stored in `devices.public_key` | `ed25519:` + base64url (no padding) of the 32 raw bytes: 51 characters |
-| Signed message | the bytes of `gpis-academy/check-result/v1` + line feed (0x0A) + the payload characters, in UTF-8 |
+| Signed message | the bytes of `ruftech-academy/check-result/v1` + line feed (0x0A) + the payload characters, in UTF-8 |
 | Signature | 64 bytes, base64url without padding: 86 characters |
 
 Base64url is strict: only `A–Z a–z 0–9 _ -`, no `=`, and the text must be the one encoding of
@@ -115,7 +115,7 @@ A challenge is canonical JSON with exactly these fields:
 | `check` | `id`, `version`, `sha256` of the published check |
 | `issued_at`, `expires_at` | Integer seconds; `expires_at` = `issued_at` + 900 |
 
-`stamp` = base64url( HMAC-SHA256( challenge key, `gpis-academy/challenge/v1` + LF + challenge ) ),
+`stamp` = base64url( HMAC-SHA256( challenge key, `ruftech-academy/challenge/v1` + LF + challenge ) ),
 43 characters. The challenge key is a server-only secret of at least 32 bytes. The platform
 stores nothing when it issues a challenge; the stamp proves later that it issued it.
 
@@ -129,7 +129,7 @@ without the route, the route passes a second stamp, which the database recompute
 
 ```text
 record stamp = lowercase hex of HMAC-SHA256( record key,
-  "gpis-academy/record/v1" LF user_id LF device_id LF definition_id LF nonce LF payload_sha256 )
+  "ruftech-academy/record/v1" LF user_id LF device_id LF definition_id LF nonce LF payload_sha256 )
 ```
 
 - `definition_id` is the `check_definitions.id`, in plain decimal.
@@ -209,7 +209,7 @@ The key handling is also checked against RFC 8032, test 1: seed
 {"check":{"id":"m1-p1","sha256":"abababababababababababababababababababababababababababababababab","version":"1.0.0"},"device_id":"22222222-2222-4222-8222-222222222222","expires_at":1794000900,"issued_at":1794000000,"kind":"academy.challenge","nonce":"AAECAwQFBgcICQoLDA0ODxAREhMUFRYX","user_id":"11111111-1111-4111-8111-111111111111","v":1}
 ```
 
-**Challenge stamp:** `L7_FGNlaqj_2nHslUWTAjjqap2RRgaRWUP3a0fShNrE`
+**Challenge stamp:** `O9Av1g4ceBPqsEBm8tWCSwQ1bsIIpedllAaHPHFyxsE`
 
 **Payload** (canonical, one line, 928 bytes in UTF-8; it holds `—` and `é` on purpose):
 
@@ -220,8 +220,8 @@ The key handling is also checked against RFC 8032, test 1: seed
 | Item | Value |
 | :--- | :--- |
 | SHA-256 of the payload | `0569d3458c317e448258bfebcdb0e87832c9cd41dd56932fd936b8dec268728a` |
-| Signature by device A | `wyffKLd7hcv4ht6k0Zkd9xbo9uTRRD_9sNfu8fbxvXKVy3J_IAUzh13fBTWHfUjDUPtHitR1dBDvLFeSmHLcAA` |
-| Record stamp | `602824d1042ff9dabf6aee743baa50de9eecebc08107dff4ea83ec7fba6dd37e` |
+| Signature by device A | `NZa7ZUAZsqekzMJnPHvkG24-ksEAF0__tPBWI6yCvfWtslOTSbPi0NvK0xfwlJRSvZqtN7ClBSdee_OlJDJZAg` |
+| Record stamp | `e8ae6ffb503d17242525cc83dcba366892b808fea97b1d8a4f7f2ea3378222a5` |
 
 ## 10. What must fail (all tested)
 

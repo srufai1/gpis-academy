@@ -31,12 +31,12 @@ const V = {
   now: 1794000000,
   nonce: "AAECAwQFBgcICQoLDA0ODxAREhMUFRYX",
   challenge: '{"check":{"id":"m1-p1","sha256":"abababababababababababababababababababababababababababababababab","version":"1.0.0"},"device_id":"22222222-2222-4222-8222-222222222222","expires_at":1794000900,"issued_at":1794000000,"kind":"academy.challenge","nonce":"AAECAwQFBgcICQoLDA0ODxAREhMUFRYX","user_id":"11111111-1111-4111-8111-111111111111","v":1}',
-  stamp: "L7_FGNlaqj_2nHslUWTAjjqap2RRgaRWUP3a0fShNrE",
+  stamp: "O9Av1g4ceBPqsEBm8tWCSwQ1bsIIpedllAaHPHFyxsE",
   payload: '{"challenge":{"expires_at":1794000900,"nonce":"AAECAwQFBgcICQoLDA0ODxAREhMUFRYX"},"check":{"id":"m1-p1","sha256":"abababababababababababababababababababababababababababababababab","version":"1.0.0"},"checker_version":"0.1.0","commit":{"clean":true,"sha":"a1b2c3d"},"device_id":"22222222-2222-4222-8222-222222222222","finished_at":1794000009,"kind":"academy.check-result","passed":false,"results":{"steps":[{"id":"class-list","kind":"files","outcome":"pass","reasons":[],"required":true,"title":"The class list is in reports/term-1"},{"id":"backup-runs","kind":"tests","outcome":"fail","reasons":["Running ./scripts/backup.sh did not print exactly \'backup ok\'."],"required":true,"title":"backup.sh prints \\"backup ok\\""},{"id":"answers","kind":"doc","outcome":"pass","reasons":[],"required":true,"title":"answers.md has the three headings — é"}]},"started_at":1794000005,"user_id":"11111111-1111-4111-8111-111111111111","v":1}',
   payloadBytes: 928,
   payloadSha256: "0569d3458c317e448258bfebcdb0e87832c9cd41dd56932fd936b8dec268728a",
-  signature: "wyffKLd7hcv4ht6k0Zkd9xbo9uTRRD_9sNfu8fbxvXKVy3J_IAUzh13fBTWHfUjDUPtHitR1dBDvLFeSmHLcAA",
-  recordStamp: "602824d1042ff9dabf6aee743baa50de9eecebc08107dff4ea83ec7fba6dd37e",
+  signature: "NZa7ZUAZsqekzMJnPHvkG24-ksEAF0__tPBWI6yCvfWtslOTSbPi0NvK0xfwlJRSvZqtN7ClBSdee_OlJDJZAg",
+  recordStamp: "e8ae6ffb503d17242525cc83dcba366892b808fea97b1d8a4f7f2ea3378222a5",
 };
 /** The result as the CLI builds it, with keys in a non-canonical order on purpose. */
 const result = () => ({

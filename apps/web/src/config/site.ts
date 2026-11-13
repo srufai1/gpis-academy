@@ -3,7 +3,7 @@
  * No other file types the site name.
  */
 export const SITE = {
-  name: "GPIS Academy",
+  name: "Ruftech Academy",
   description: "Learn software engineering by rebuilding a real system.",
   landing: {
     headline: "Learn software engineering by rebuilding a real system.",

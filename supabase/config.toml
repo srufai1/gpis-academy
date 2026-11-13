@@ -1,6 +1,6 @@
 # Supabase CLI configuration for local development (`npx supabase start`, needs Docker).
 # The hosted project is configured in the Supabase dashboard; nothing here holds a secret.
-project_id = "gpis-academy"
+project_id = "ruftech-academy"
 
 [api]
 enabled = true

@@ -23,7 +23,7 @@ try {
   const noGuard = await sqlStep(q, ctx);
   eq(noGuard.outcome, "needs", "a database without the lab marker is refused before any query");
   assert.match(noGuard.reasons[0], /not marked as your lab/); n++;
-  await db.exec(`create table public.academy_lab (purpose text not null); insert into public.academy_lab values ('gpis-academy lab');`);
+  await db.exec(`create table public.academy_lab (purpose text not null); insert into public.academy_lab values ('ruftech-academy lab');`);
 
   eq(await sqlStep(q, ctx), { outcome: "pass", reasons: [] }, "the expected rows: pass");
   const wrong = await sqlStep(step({ queries: [{ sql: "select name from students order by id", expect_count: 2 }] }), ctx);

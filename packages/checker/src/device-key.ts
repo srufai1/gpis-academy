@@ -4,7 +4,7 @@
  * and never sent; only the public key goes to the platform.
  */
 import { join } from "node:path";
-import { generateDeviceKeyPair, isDevicePublicKey } from "@gpis-academy/shared/signing";
+import { generateDeviceKeyPair, isDevicePublicKey } from "@ruftech-academy/shared/signing";
 import { academyDir, readJson, writeSecretJson } from "./secret-file.ts";
 
 export type DeviceKey = { platform_url: string; device_id: string | null; public_key: string; private_seed: string };

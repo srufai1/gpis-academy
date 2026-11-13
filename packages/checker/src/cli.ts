@@ -1,5 +1,5 @@
 /**
- * academy — the GPIS Academy checker (docs/checker.md).
+ * academy — the Ruftech Academy checker (docs/checker.md).
  * Exit codes: 0 passed / ready, 1 not passed / not ready, 2 checker error.
  */
 import { CheckerError } from "./errors.ts";
@@ -13,7 +13,7 @@ import { createInterface } from "node:readline/promises";
 import { STEP_KINDS } from "./steps/index.ts";
 import { CHECKER_VERSION } from "./version.ts";
 
-const HELP = `academy ${CHECKER_VERSION} — checks your GPIS Academy work on this computer
+const HELP = `academy ${CHECKER_VERSION} — checks your Ruftech Academy work on this computer
 
   npx academy doctor                 is this computer ready?
   npx academy login [--url=]         sign in with a code from your email

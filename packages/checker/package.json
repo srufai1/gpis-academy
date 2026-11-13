@@ -1,5 +1,5 @@
 {
-  "name": "@gpis-academy/checker",
+  "name": "@ruftech-academy/checker",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "academy": "bin/academy.mjs"
   },
   "dependencies": {
-    "@gpis-academy/shared": "*",
+    "@ruftech-academy/shared": "*",
     "yaml": "^2.8.2",
     "pg": "^8.23.1"
   }

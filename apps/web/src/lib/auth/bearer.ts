@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { bearerToken } from "@gpis-academy/shared/device";
+import { bearerToken } from "@ruftech-academy/shared/device";
 import { supabaseEnv } from "@/lib/supabase/env";
 
 /**

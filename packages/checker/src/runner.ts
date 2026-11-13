@@ -3,7 +3,7 @@
  * A step returns an outcome and short reasons; an unknown kind or a broken step
  * definition is a checker error (exit 2), never a pass.
  */
-import { LIMITS, passedFromSteps, type StepKind, type StepOutcome, type StepResult } from "@gpis-academy/shared/result-schema";
+import { LIMITS, passedFromSteps, type StepKind, type StepOutcome, type StepResult } from "@ruftech-academy/shared/result-schema";
 import { CheckerError } from "./errors.ts";
 
 export type StepContext = {
