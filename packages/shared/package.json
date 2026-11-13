@@ -9,7 +9,8 @@
     "./content-load": "./src/content-load.ts",
     "./canonical": "./src/canonical.ts",
     "./result-schema": "./src/result-schema.ts",
-    "./signing": "./src/signing.ts"
+    "./signing": "./src/signing.ts",
+    "./device": "./src/device.ts"
   },
   "dependencies": {
     "yaml": "^2.8.2"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RaisedRow } from "@/components/raised-row";
 import { Button } from "@/components/ui/button";
 import { getRequestClaims } from "@/lib/auth/request";
 import { signOut } from "./actions";
@@ -11,6 +12,7 @@ export default async function MePage() {
     <div className="mx-auto w-full max-w-3xl space-y-4">
       <h1 className="text-xl font-semibold">Me</h1>
       {claims?.email ? <p className="text-muted-foreground">{claims.email}</p> : null}
+      <RaisedRow href="/me/devices" title="Devices" line="Computers where the checker is signed in" />
       <form action={signOut}>
         <Button type="submit" variant="outline">Sign out</Button>
       </form>

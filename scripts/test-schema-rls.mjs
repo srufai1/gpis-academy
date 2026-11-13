@@ -192,13 +192,13 @@ await test("every function pins search_path; trigger functions cannot be called 
   const fns = await rows(db, `select p.proname, p.prosecdef, coalesce(array_to_string(p.proconfig, ','), '') cfg, p.prorettype::regtype::text ret,
       has_function_privilege('authenticated', p.oid, 'execute') auth, has_function_privilege('public', p.oid, 'execute') pub
     from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' order by 1`);
-  assert.deepEqual(fns.map((x) => x.proname), ["app_role", "devices_revoke_once", "forbid_history_change", "handle_new_user", "reviews_set_revision", "set_updated_at"]);
+  assert.deepEqual(fns.map((x) => x.proname), ["app_role", "devices_revoke_once", "forbid_history_change", "handle_new_user", "register_device", "reviews_set_revision", "set_updated_at"]);
   for (const fn of fns) {
     assert.equal(fn.cfg, 'search_path=""', `${fn.proname} pins search_path to empty`);
     assert.equal(fn.pub, false, `${fn.proname}: no PUBLIC execute`);
-    assert.equal(fn.auth, fn.proname === "app_role", `${fn.proname}: execute for signed-in users only where needed`);
+    assert.equal(fn.auth, ["app_role", "register_device"].includes(fn.proname), `${fn.proname}: execute for signed-in users only where needed`);
   }
-  assert.deepEqual(fns.filter((x) => x.prosecdef).map((x) => x.proname), ["handle_new_user", "reviews_set_revision"], "the only SECURITY DEFINER functions (both trigger functions)");
+  assert.deepEqual(fns.filter((x) => x.prosecdef).map((x) => x.proname), ["handle_new_user", "register_device", "reviews_set_revision"], "the only SECURITY DEFINER functions (two triggers, and the T18 door into devices)");
 });
 
 await test("constraints refuse wrong data even from the owner", async () => {

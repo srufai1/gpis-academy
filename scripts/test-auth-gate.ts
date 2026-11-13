@@ -21,8 +21,12 @@ same(decideGate("/map", true), { kind: "next", private: true }, "signed in: /map
 same(decideGate("/sign-up", true), { kind: "redirect", to: HOME_PATH }, "signed in: /sign-up goes to /map");
 same(decideGate("/", false), { kind: "next", private: false }, "landing is public");
 same(decideGate("/course", false), { kind: "next", private: false }, "public course map is public");
-for (const path of ["/progress", "/me", "/project/1", "/map/module-01", "/api/check-runs"])
+for (const path of ["/progress", "/me", "/me/devices", "/project/1", "/map/module-01", "/api/other", "/api/devicesx", "/api/cli"])
   same(decideGate(path, false).kind, "redirect", `signed out: ${path} is closed`);
+
+// The CLI's routes pass the gate and answer 401 themselves (ADR-7).
+for (const path of ["/api/devices", "/api/cli/config", "/api/check-runs", "/api/check-runs/challenge"])
+  same(decideGate(path, false), { kind: "next", private: true }, `signed out: ${path} reaches its route`);
 
 // One getClaims() per render.
 let calls = 0;

@@ -16,6 +16,16 @@ npx academy doctor
 Needs Node 22.18 or newer. Nothing else is downloaded: the tarball has no dependencies.
 Playwright is optional; without it, a `page` step reports "needs" instead of failing.
 
+Then sign in once on this computer (ADR-7):
+
+```bash
+npx academy login --url=https://<the platform address>
+```
+
+It asks for your email; type the code from the email. The session and the device key are
+saved in `~/.academy/` (mode 600). `npx academy logout` signs this computer out. Revoke a
+device on the platform under **Me → Devices**.
+
 `npx academy init <task>` creates the lab under `~/academy-labs/<task>/` and writes
 `.vscode/tasks.json`, so the check also runs from VS Code's *Run Task* menu.
 
