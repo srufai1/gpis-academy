@@ -15,9 +15,11 @@ export type ProjectViewProps = {
   ownBuildHtml: string;
   /** The Copy command control (a Client Component), given by the page. */
   command: React.ReactNode;
+  /** The checker results (T20), given by the page. */
+  results: React.ReactNode;
 };
 
-/** Project task page (mockup 04), without checker results yet (T20 adds them). */
+/** Project task page (mockup 04), with the checker results the CLI sent (T20). */
 export function ProjectView(p: ProjectViewProps) {
   return (
     <article className="mx-auto w-full min-w-0 max-w-3xl space-y-8">
@@ -51,7 +53,7 @@ export function ProjectView(p: ProjectViewProps) {
 
       <section aria-labelledby="result" className="space-y-2">
         <h2 id="result" className="font-semibold">Last result</h2>
-        <p className="rounded-xl border bg-card p-4 text-sm text-muted-foreground shadow-sm">No result yet. Run the command in your terminal.</p>
+        {p.results}
       </section>
 
       <div className="space-y-2">

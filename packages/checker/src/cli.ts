@@ -8,6 +8,7 @@ import { doctor } from "./commands/doctor.ts";
 import { init } from "./commands/init.ts";
 import { login } from "./commands/login.ts";
 import { logout } from "./commands/logout.ts";
+import { status } from "./commands/status.ts";
 import { hostname } from "node:os";
 import { createInterface } from "node:readline/promises";
 import { STEP_KINDS } from "./steps/index.ts";
@@ -19,7 +20,8 @@ const HELP = `academy ${CHECKER_VERSION} — checks your Ruftech Academy work on
   npx academy login [--url=]         sign in with a code from your email
   npx academy logout                 sign out on this computer
   npx academy init <id> [--reset]    set up a project's lab folder
-  npx academy check <id> [--dry-run] check your work
+  npx academy check <id> [--dry-run] check your work and send the result
+  npx academy status [<id>]          what the platform has recorded
   npx academy --version`;
 
 export async function main(argv: string[], print: (line: string) => void = console.log, printError: (line: string) => void = console.error): Promise<number> {
@@ -33,6 +35,7 @@ export async function main(argv: string[], print: (line: string) => void = conso
       case "doctor": return doctor(print);
       case "login": return await login(urlFlag ? { url: urlFlag } : {}, { fetch, ask, print, hostname });
       case "logout": return await logout({ fetch, print });
+      case "status": return await status(args[0], { fetch, print });
       case "init": return requireId(args[0]) && init(args[0]!, flags.has("--reset"), print);
       case "check": return requireId(args[0]) && (await check(args[0]!, { dryRun: flags.has("--dry-run"), ...(dirFlag ? { dir: dirFlag } : {}) }, STEP_KINDS, print));
       case "--version": case "-v": print(CHECKER_VERSION); return 0;

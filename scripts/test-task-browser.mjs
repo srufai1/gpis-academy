@@ -42,7 +42,7 @@ await withPhone(async (page) => {
     assert.equal(await page.getByText(/^Hints \(\d+\)$/).count() === 1, hints, `${guidance}: Hints ${hints ? "shown" : "hidden"}`); checks++;
     assert.ok(await noSideways(page), `${guidance}: no sideways scroll`); checks++;
   }
-  assert.ok(await page.getByText("No result yet. Run the command in your terminal.").isVisible()); checks++;
+  // The results card and its empty state are tested in test-results-view-browser.mjs (T20).
   const copy = page.getByRole("button", { name: "Copy: npx academy check m1-p1" });
   assert.ok(await copy.isVisible(), "the Copy button is a real button"); checks++;
   assert.ok((await copy.boundingBox()).height >= 44, "Copy is at least 44px"); checks++;

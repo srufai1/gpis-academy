@@ -276,6 +276,11 @@ four strings.
 | 413 | `bad_request` | Body too large |
 | 503 | `not_ready` | The server keys are not set |
 
+**`GET /api/check-runs/recent[?check=<id>]`** (T20, read-only, for `academy status`): the
+learner's ten newest runs, read as the learner (RLS: own rows only). Answer `200` with
+`{ "runs": [{ "run_id", "check_id", "version", "current_version", "passed", "commit_sha",
+"recorded_at" }] }`; `400` for a malformed check id; `401` without a valid Bearer token.
+
 `record_check_run(p_device_id, p_definition_id, p_nonce, p_payload, p_signature, p_stamp)` is
 the database function behind the second request (`0007_record_check_run.sql`). It recomputes
 the record stamp, re-checks that the payload names the same learner, device and nonce, that
