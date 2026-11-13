@@ -20,6 +20,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { PGlite } from "@electric-sql/pglite";
+import { pgcrypto } from "@electric-sql/pglite/contrib/pgcrypto";
 
 const migrationsDir = fileURLToPath(new URL("../../supabase/migrations/", import.meta.url));
 
@@ -28,6 +29,10 @@ const SCAFFOLD = `
   create role authenticated nologin;
   create role service_role nologin bypassrls;
   create role supabase_auth_admin nologin;
+
+  -- Supabase keeps extensions in their own schema.
+  create schema extensions;
+  grant usage on schema extensions to anon, authenticated, service_role;
 
   create schema auth;
   grant usage on schema auth to anon, authenticated, service_role, supabase_auth_admin;
@@ -70,7 +75,8 @@ export function migrationFiles() {
  * `upTo` stops after that file (to test an upgrade); `extra` is SQL run after.
  */
 export async function freshDatabase({ upTo = null, extra = [] } = {}) {
-  const db = new PGlite();
+  // pgcrypto is offered, not installed: the migration that needs it creates it (as on Supabase).
+  const db = new PGlite({ extensions: { pgcrypto } });
   await db.exec(SCAFFOLD);
   for (const file of migrationFiles()) {
     try {

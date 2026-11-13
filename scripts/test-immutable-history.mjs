@@ -91,10 +91,10 @@ await test("check_runs refuses a direct INSERT from every API role, even a perfe
   try { await db.query(CHECK_RUN_INSERT, args); } finally { await db.exec("rollback"); }
 });
 
-await test("no function yet lets an API role write check_runs (T19 adds the only one)", async () => {
+await test("exactly one function writes check_runs: record_check_run (T19)", async () => {
   const writers = await rows(db, `select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
     where n.nspname = 'public' and p.prosrc ~* 'check_runs'`);
-  assert.deepEqual(writers, []);
+  assert.deepEqual(writers, [{ proname: "record_check_run" }]);
 });
 
 await test("the table fits the T19 door: one result per nonce; the device must be the learner's own", async () => {

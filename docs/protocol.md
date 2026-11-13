@@ -240,7 +240,48 @@ The key handling is also checked against RFC 8032, test 1: seed
 | A result naming another learner | `mismatch_user` / `expected_user` |
 | The same challenge recorded twice | refused by the database (unique `nonce`) |
 
-## 11. Changing the protocol
+## 11. The two HTTP requests (T19)
+
+Both are `POST`, JSON, with `Authorization: Bearer <access token>` (ADR-7). A cookie is never
+accepted. Every answer is JSON with `Cache-Control: no-store`; an error has `error` (a short
+code) and `message` (one sentence for the learner).
+
+**`/api/check-runs/challenge`** — body `{ "check_id", "version", "sha256", "device_id" }`,
+where `sha256` is the hash of the CLI's own copy of the check.
+
+| Status | `error` | Meaning |
+| :--- | :--- | :--- |
+| 200 | — | `{ "challenge", "stamp" }` (section 5) |
+| 400 | `bad_request` | A field is missing or malformed |
+| 401 | `sign_in` | No valid Bearer token: run `academy login` |
+| 403 | `device` | Not this learner's device, or revoked |
+| 404 | `unknown_check` | This check version is not published |
+| 409 | `outdated_check` | A newer version of the check is published |
+| 409 | `check_changed` | The CLI's copy of the check differs from the published one |
+| 503 | `not_ready` | The server keys are not set |
+
+**`/api/check-runs`** — body `{ "challenge", "stamp", "payload", "signature" }`: exactly these
+four strings.
+
+| Status | `error` | Meaning |
+| :--- | :--- | :--- |
+| 201 | — | `{ "run_id", "passed" }`: recorded |
+| 400 | `bad_request` | Not four strings, or the payload is not canonical or not valid |
+| 401 | `sign_in` | No valid Bearer token |
+| 403 | `device` | Not this learner's device, or revoked |
+| 403 | `refused` | Any other failed check of section 8 (one answer on purpose; the exact code is in the server log) |
+| 404 | `unknown_check` | The check version is not published |
+| 409 | `challenge_expired` | More than 15 minutes since the challenge: run the check again |
+| 409 | `already_recorded` | This nonce was recorded before (a replay, or a retry after a lost answer: treat as success) |
+| 413 | `bad_request` | Body too large |
+| 503 | `not_ready` | The server keys are not set |
+
+`record_check_run(p_device_id, p_definition_id, p_nonce, p_payload, p_signature, p_stamp)` is
+the database function behind the second request (`0007_record_check_run.sql`). It recomputes
+the record stamp, re-checks that the payload names the same learner, device and nonce, that
+the device is still valid and the check version is published, and inserts.
+
+## 12. Changing the protocol
 
 Any change to a rule above is a new version: new `v`, new context lines (`…/v2`), new vectors.
 A v1 receiver refuses everything that is not `v: 1`.
