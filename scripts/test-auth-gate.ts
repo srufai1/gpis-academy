@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { decideGate, HOME_PATH, SIGN_IN_PATH } from "../apps/web/src/lib/auth/gate.ts";
 import { createClaimsLoader } from "../apps/web/src/lib/auth/claims.ts";
 import { AUTH_MESSAGES, authErrorMessage, readCredentials } from "../apps/web/src/lib/auth/messages.ts";
+import { isValidSupabaseUrl } from "../apps/web/src/lib/supabase/env.ts";
 
 let checks = 0;
 const ok = (value: unknown, label: string) => { assert.ok(value, label); checks++; };
@@ -56,5 +57,9 @@ ok(proxy.includes('"Cache-Control", "private, no-store"'), "private pages and re
 // Private pages render per request: cookies are read before the "is Supabase set up" check.
 const server = readFileSync(new URL("../apps/web/src/lib/supabase/server.ts", import.meta.url), "utf8");
 ok(server.indexOf("await cookies()") > -1 && server.indexOf("await cookies()") < server.indexOf("supabaseEnv()"), "cookies are read first, so private pages are never built once as static pages");
+
+// A wrong Supabase URL is treated as "not set up" (with a log line), never a crash.
+for (const good of ["https://abcd1234.supabase.co", "https://abcd1234.supabase.co/", "http://127.0.0.1:54321"]) ok(isValidSupabaseUrl(good), `valid URL: ${good}`);
+for (const bad of ['"https://abcd1234.supabase.co"', "abcd1234.supabase.co", "https://abcd1234.supabase.co/rest/v1/", "sb_publishable_x", "http://abcd1234.supabase.co", ""]) ok(!isValidSupabaseUrl(bad), `refused URL: ${bad}`);
 
 console.log(`Auth gate: ${checks} checks passed.`);
