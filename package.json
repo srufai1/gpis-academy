@@ -16,7 +16,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node scripts/run-tests.mjs",
-    "content": "node scripts/build-content.mjs"
+    "content": "node scripts/build-content.mjs",
+    "pack:checker": "node scripts/pack-checker.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.16",

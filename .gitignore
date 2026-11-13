@@ -13,3 +13,5 @@ next-env.d.ts
 supabase/.temp/
 supabase/.branches/
 .DS_Store
+packages/checker/.pack/
+packages/checker/release/

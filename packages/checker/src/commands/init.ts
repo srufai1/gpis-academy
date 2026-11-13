@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { loadCheck } from "../checks.ts";
 import { CheckerError } from "../errors.ts";
 import { labRoot } from "../lab.ts";
@@ -19,7 +20,21 @@ export function init(id: string, reset: boolean, print: (line: string) => void):
   const seed = insideRoot(check.dir, lab.seed);
   const run = spawnSync("bash", [seed, root], { encoding: "utf8", timeout: 30000 });
   if (run.status !== 0) throw new CheckerError(`Setting up the lab failed: ${(run.stderr || run.stdout).trim().slice(0, 300)}`);
+  writeVsCodeTask(root, id);
   print(`Lab ready: ${root}`);
   print(`Next: cd ${root}`);
   return 0;
+}
+
+/** A VS Code task, so "Run Task → academy: check <id>" runs the same command as the terminal. */
+export function writeVsCodeTask(dir: string, id: string): void {
+  mkdirSync(join(dir, ".vscode"), { recursive: true });
+  const tasks = {
+    version: "2.0.0",
+    tasks: [
+      { label: `academy: check ${id}`, type: "shell", command: `npx academy check ${id}`, problemMatcher: [], group: "test" },
+      { label: `academy: check ${id} (dry run)`, type: "shell", command: `npx academy check ${id} --dry-run`, problemMatcher: [] },
+    ],
+  };
+  writeFileSync(join(dir, ".vscode", "tasks.json"), `${JSON.stringify(tasks, null, 2)}\n`);
 }
