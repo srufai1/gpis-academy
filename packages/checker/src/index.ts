@@ -1,4 +1,2 @@
-/**
- * The `academy` checker CLI. Commands and step kinds arrive in T13–T17.
- */
-export {};
+/** The academy checker CLI. */
+export { main } from "./cli.ts";
