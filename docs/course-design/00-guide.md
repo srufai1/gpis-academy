@@ -28,7 +28,7 @@ unit can still be designed; the question says what changes with each answer.
 | Quiz id | unit id + `-quiz` | `m2-u3-quiz` |
 | `module` in front matter | 1–9; Python track is `10` (slug `py` in `course.yaml`) | `10` |
 | Lab folder | `~/academy-labs/<check id>/…`, built by `npx academy init <check id>` | `~/academy-labs/m1-p2/logs` |
-| The learner's GPIS | `~/projects/gpis-rebuild` (made in unit 1.1's own build, a Git repository from unit 1.6) | |
+| The learner's GPIS | `~/projects/gpis-rebuild` (made in unit 1.1's own build; a Git repository from unit 1.4's own build, checked in unit 1.6) | |
 | The read-only GPIS | `~/reference/gpis-school-system` (cloned in unit 1.1, write permission removed) | |
 | The portfolio site | `~/projects/portfolio` (unit 3.1) | |
 | Design documents | `~/projects/gpis-rebuild/docs/design/` (module 6) | |
@@ -302,7 +302,7 @@ learner (Known limits in `decisions.md`), so treat it as public.
 
 `version: 1.0.0` for every new check. Any change in `check/` needs a new version
 (`npm test` fails otherwise). `requires:` lists what the unit needs, from this list only:
-`wsl`, `node`, `git`, `lab-db`, `supabase`, `vercel`, `playwright`, `docker`, `python`.
+`wsl`, `node`, `git`, `github`, `lab-db`, `supabase`, `vercel`, `playwright`, `docker`, `python`.
 The checker shows it; it does not act on it.
 
 ---
