@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CopyCommand } from "@/components/copy-command";
 import { PageError } from "@/components/page-error";
+import { RaisedRow } from "@/components/raised-row";
 import { ProjectView } from "@/components/views/project-view";
 import { requireLearner } from "@/lib/auth/learner";
 import { getUnitByProject, moduleOfUnit } from "@/lib/content/load";
@@ -24,11 +25,12 @@ export default async function ProjectPage({ params }: Props) {
   const unit = getUnitByProject((await params).id);
   if (!unit) notFound();
   // Results as the learner (RLS: own rows only). The current version is the one this site ships.
-  const [runRows, profile] = await Promise.all([
+  const [runRows, profile, reviews] = await Promise.all([
     readRuns(supabase, { checkId: unit.check.id, limit: 20 }).catch(() => null),
     supabase.from("profiles").select("time_zone").eq("id", claims.sub).maybeSingle(),
+    supabase.from("reviews").select("revision", { count: "exact", head: true }).eq("item_slug", unit.check.id),
   ]);
-  if (!runRows) return <PageError />;
+  if (!runRows || reviews.error) return <PageError />;
   const timeZone = (profile.data?.time_zone as string | undefined) ?? "Africa/Accra";
   const runs = toRunViews(runRows, new Map([[unit.check.id, unit.check.version]])).map((r) => ({ ...r, when: formatWhen(r.recordedAt, timeZone) }));
   const mod = moduleOfUnit(unit);
@@ -49,6 +51,15 @@ export default async function ProjectPage({ params }: Props) {
       ownBuildHtml={renderMarkdown(unit.ownBuild)}
       command={<CopyCommand command={`npx academy check ${unit.check.id}`} />}
       results={<Results runs={runs} />}
+      review={
+        <RaisedRow
+          href={`/project/${unit.check.id}/review`}
+          title={reviews.count ? "Self-review" : "Write self-review"}
+          line={runs.some((r) => r.passed && r.currentVersion)
+            ? reviews.count ? `${reviews.count} revision${reviews.count === 1 ? "" : "s"} saved · add a new one` : "Your own check: checklist, explanation, GPIS comparison"
+            : "Opens after your work passes the current check"}
+        />
+      }
     />
   );
 }

@@ -17,6 +17,8 @@ export type ProjectViewProps = {
   command: React.ReactNode;
   /** The checker results (T20), given by the page. */
   results: React.ReactNode;
+  /** The link to the self-review (T22), given by the page. */
+  review: React.ReactNode;
 };
 
 /** Project task page (mockup 04), with the checker results the CLI sent (T20). */
@@ -54,6 +56,11 @@ export function ProjectView(p: ProjectViewProps) {
       <section aria-labelledby="result" className="space-y-2">
         <h2 id="result" className="font-semibold">Last result</h2>
         {p.results}
+      </section>
+
+      <section aria-labelledby="after-pass" className="space-y-2">
+        <h2 id="after-pass" className="font-semibold">After a pass</h2>
+        {p.review}
       </section>
 
       <div className="space-y-2">
