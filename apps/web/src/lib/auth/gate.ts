@@ -6,8 +6,9 @@
 export const SIGN_IN_PATH = "/sign-in";
 export const HOME_PATH = "/map";
 
-const PUBLIC_PATHS = new Set(["/", "/course"]);
-const AUTH_PATHS = new Set(["/sign-in", "/sign-up"]);
+// /auth/confirm checks an email link and must work signed in or out.
+const PUBLIC_PATHS = new Set(["/", "/course", "/auth/confirm"]);
+const AUTH_PATHS = new Set(["/sign-in", "/sign-up", "/forgot-password"]);
 
 /**
  * The CLI's routes (ADR-7): the gate lets them through and each route answers 401 itself,

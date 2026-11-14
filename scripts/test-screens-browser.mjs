@@ -101,6 +101,8 @@ const SCREENS = [
   ["05 progress · reviewed", () => progress([{ item_slug: "m1-p1", state: "done", due_on: "2026-12-01", updated_at: "2026-11-30T00:00:00Z" }], [{ item_slug: "m1-p1", version: "1.0.0", passed: true }], [{ item_slug: "m1-p1" }], 1), 1],
   ["review · before a pass (T22)", () => review(false), 0],
   ["review · open (T22)", () => review(true), 1],
+  ["forgot password", () => renderView("../../../scripts/lib/password-forms-fixture.tsx", "ForgotFixture", {}), 1],
+  ["choose a new password", () => renderView("../../../scripts/lib/password-forms-fixture.tsx", "ResetFixture", {}), 1],
   ["loading (every signed-in page)", () => renderView("app/(app)/loading.tsx", "default", {}), 0],
   ["error (every data page)", () => renderView("components/page-error.tsx", "PageError", {}), 0],
 ];

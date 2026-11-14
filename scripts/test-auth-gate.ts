@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { decideGate, HOME_PATH, SIGN_IN_PATH } from "../apps/web/src/lib/auth/gate.ts";
 import { createClaimsLoader } from "../apps/web/src/lib/auth/claims.ts";
-import { AUTH_MESSAGES, authErrorMessage, readCredentials } from "../apps/web/src/lib/auth/messages.ts";
+import { AUTH_MESSAGES, authErrorMessage, readCredentials, readEmail, readNewPassword, safeNext } from "../apps/web/src/lib/auth/messages.ts";
 import { isValidSupabaseUrl } from "../apps/web/src/lib/supabase/env.ts";
 
 let checks = 0;
@@ -27,6 +27,25 @@ for (const path of ["/progress", "/me", "/me/devices", "/project/1", "/map/modul
 // The CLI's routes pass the gate and answer 401 themselves (ADR-7).
 for (const path of ["/api/devices", "/api/cli/config", "/api/check-runs", "/api/check-runs/challenge"])
   same(decideGate(path, false), { kind: "next", private: true }, `signed out: ${path} reaches its route`);
+
+// Forgot password: the pages and the email link (T-reset).
+same(decideGate("/forgot-password", false), { kind: "next", private: false }, "signed out: /forgot-password opens");
+same(decideGate("/forgot-password", true), { kind: "redirect", to: HOME_PATH }, "signed in: /forgot-password goes to /map");
+same(decideGate("/auth/confirm", false), { kind: "next", private: false }, "the email link works signed out");
+same(decideGate("/auth/confirm", true), { kind: "next", private: false }, "and signed in");
+same(decideGate("/reset-password", false), { kind: "redirect", to: SIGN_IN_PATH }, "signed out: /reset-password is closed (the link signs you in first)");
+same(decideGate("/reset-password", true), { kind: "next", private: true }, "signed in: /reset-password opens as a private page");
+const fd = (o: Record<string, string>) => { const f = new FormData(); for (const [k, v] of Object.entries(o)) f.set(k, v); return f; };
+same(readEmail(fd({ email: "  Me@Example.TEST " })), { ok: true, email: "me@example.test" }, "email is trimmed and lower-cased");
+same(readEmail(fd({ email: "nope" })), { ok: false, error: AUTH_MESSAGES.badEmail }, "a bad email is refused");
+same(readNewPassword(fd({ password: "short", password_again: "short" })), { ok: false, error: AUTH_MESSAGES.weakPassword }, "under 8 characters is refused");
+same(readNewPassword(fd({ password: "x".repeat(73), password_again: "x".repeat(73) })), { ok: false, error: AUTH_MESSAGES.weakPassword }, "over 72 is refused");
+same(readNewPassword(fd({ password: "long enough 1", password_again: "long enough 2" })), { ok: false, error: AUTH_MESSAGES.mismatch }, "the two must match");
+same(readNewPassword(fd({ password: "long enough 1", password_again: "long enough 1" })), { ok: true, password: "long enough 1" }, "a good new password");
+same(authErrorMessage({ code: "same_password" }), AUTH_MESSAGES.samePassword, "the old password again");
+for (const bad of ["https://evil.example", "//evil.example", "/\\evil.example", "/x?y=1", "javascript:alert(1)", "", null, undefined, "/a/../b"])
+  same(safeNext(bad as string), "/map", `refused as a next page: ${String(bad)}`);
+same([safeNext("/reset-password"), safeNext("/project/m1-p1"), safeNext(null, "/reset-password")], ["/reset-password", "/project/m1-p1", "/reset-password"], "paths on this site are kept");
 
 // One getClaims() per render.
 let calls = 0;

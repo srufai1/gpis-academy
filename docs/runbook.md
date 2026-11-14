@@ -98,6 +98,17 @@ Supabase → Authentication:
    built-in sender is limited and the templates cannot be edited.
 4. **Emails → Templates → Magic Link:** shows `{{ .Token }}` (done). This is the code
    `academy login` asks for.
+4b. **Emails → Templates → Reset Password** ("Forgot password?" on the sign-in page). Subject
+   `Reset your Ruftech Academy password`; body:
+
+   ```html
+   <h2>Choose a new password</h2>
+   <p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password">Choose a new password</a></p>
+   <p>The link works once and expires soon. If you did not ask for it, ignore this email.</p>
+   ```
+
+   This link works on any device. With Supabase's default template the link still works, but
+   only in the browser where "Send the link" was pressed. Step 5.1 (Site URL) must be set first.
 5. **Sign In / Providers → Email:** email sign-in on; email OTP expiry `600` seconds.
 6. **After your own account exists (step 7):** turn **off** "Allow new users to sign up".
    The site is public; with sign-up on, anyone could make an account. Turn it on again only
