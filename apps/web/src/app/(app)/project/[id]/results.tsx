@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 export type ShownRun = RunView & { when: string };
 
 const STEP_ICON = {
-  pass: { Icon: Check, label: "Passed", className: "text-emerald-500" },
-  fail: { Icon: X, label: "Failed", className: "text-red-500" },
-  needs: { Icon: CircleAlert, label: "Needs something on your computer", className: "text-amber-500" },
+  pass: { Icon: Check, label: "Passed", className: "text-success" },
+  fail: { Icon: X, label: "Failed", className: "text-destructive" },
+  needs: { Icon: CircleAlert, label: "Needs something on your computer", className: "text-muted-foreground" },
   skipped: { Icon: Minus, label: "Skipped", className: "text-muted-foreground" },
 } as const;
 
@@ -33,7 +33,7 @@ export function Results({ runs }: { runs: ShownRun[] }) {
       <p className="text-sm text-muted-foreground">{last.when} · check v{last.version}</p>
       <div className="min-w-0 space-y-3 rounded-xl border bg-card p-4 shadow-sm">
         <p className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-          <span className={cn("inline-flex items-center gap-1.5 font-semibold", last.passed && last.currentVersion ? "text-emerald-500" : last.passed ? "" : "text-red-500")}>
+          <span className={cn("inline-flex items-center gap-1.5 font-semibold", last.passed && last.currentVersion ? "text-success" : last.passed ? "" : "text-destructive")}>
             {last.passed ? <Check aria-hidden="true" className="size-4" /> : <X aria-hidden="true" className="size-4" />}
             {verdict(last)}
           </span>

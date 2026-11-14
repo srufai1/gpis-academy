@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CopyCommand } from "@/components/copy-command";
 import { PageError } from "@/components/page-error";
-import { RaisedRow } from "@/components/raised-row";
 import { ProjectView } from "@/components/views/project-view";
 import { requireLearner } from "@/lib/auth/learner";
 import { getUnitByProject, moduleOfUnit } from "@/lib/content/load";
@@ -10,6 +9,7 @@ import { renderMarkdown } from "@/lib/content/markdown";
 import { countItems, projectParts } from "@/lib/content/sections";
 import { formatWhen, readRuns, toRunViews } from "@/lib/check-runs/read";
 import { Results } from "./results";
+import { ReviewLink } from "./review-link";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -36,6 +36,8 @@ export default async function ProjectPage({ params }: Props) {
   const mod = moduleOfUnit(unit);
   const parts = projectParts(unit.lab, unit.meta.guidance);
   const fold = (s: { body: string } | null) => (s ? { count: countItems(s.body), html: renderMarkdown(s.body) } : null);
+  // Mockup 04: after a pass of the current version, the self-review is the main action.
+  const passedNow = runs.some((r) => r.passed && r.currentVersion);
   return (
     <ProjectView
       moduleHref={`/map/${mod.slug}`}
@@ -49,17 +51,9 @@ export default async function ProjectPage({ params }: Props) {
       hints={fold(parts.hints)}
       debuggingHtml={renderMarkdown(unit.debuggingLab)}
       ownBuildHtml={renderMarkdown(unit.ownBuild)}
-      command={<CopyCommand command={`npx academy check ${unit.check.id}`} />}
+      command={<CopyCommand command={`npx academy check ${unit.check.id}`} quiet={passedNow} />}
       results={<Results runs={runs} />}
-      review={
-        <RaisedRow
-          href={`/project/${unit.check.id}/review`}
-          title={reviews.count ? "Self-review" : "Write self-review"}
-          line={runs.some((r) => r.passed && r.currentVersion)
-            ? reviews.count ? `${reviews.count} revision${reviews.count === 1 ? "" : "s"} saved · add a new one` : "Your own check: checklist, explanation, GPIS comparison"
-            : "Opens after your work passes the current check"}
-        />
-      }
+      review={<ReviewLink href={`/project/${unit.check.id}/review`} passed={passedNow} revisions={reviews.count ?? 0} />}
     />
   );
 }

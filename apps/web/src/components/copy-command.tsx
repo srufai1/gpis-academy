@@ -4,8 +4,11 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/** A command to run in the terminal, with a Copy button that works by keyboard too. */
-export function CopyCommand({ command }: { command: string }) {
+/**
+ * A command to run in the terminal, with a Copy button that works by keyboard too.
+ * `quiet`: an outlined button, when another action is the screen's main one (mockup 04, after a pass).
+ */
+export function CopyCommand({ command, quiet = false }: { command: string; quiet?: boolean }) {
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
   const copy = async () => {
@@ -22,7 +25,7 @@ export function CopyCommand({ command }: { command: string }) {
     <div className="space-y-1">
       <div className="flex min-w-0 items-center gap-2 rounded-lg border bg-muted pl-3">
         <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap py-2 text-sm">{command}</code>
-        <Button type="button" size="default" onClick={copy} aria-label={`Copy: ${command}`}>
+        <Button type="button" size="default" variant={quiet ? "outline" : "default"} onClick={copy} aria-label={`Copy: ${command}`}>
           {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
           {copied ? "Copied" : "Copy"}
         </Button>
